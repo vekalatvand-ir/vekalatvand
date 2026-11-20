@@ -399,6 +399,7 @@ footer b{color:var(--gold2);font-family:'Lalezar';font-size:1.4rem}
       <div class="trust"><div><strong>+۱۰۰</strong><small>پرونده موفق</small></div><div><strong>+۱۰ سال</strong><small>تجربه وکالت</small></div><div><strong>+۱۰ نفر</strong><small>نیروی فعال دفتر</small></div><div><strong>+۴۰ نفر</strong><small>همکار غیرمستقیم</small></div></div>
     </div>
 
+[376 more lines in file. Use offset=401 to continue.]
 [371 more lines in file. Use offset=401 to continue.]    <div class="lawyer-card" id="tiltCard">
       <div class="seal">مهر رسمی<br>وکالت‌وند<br>★ ★ ★</div>
       <div class="lawyer-photo">م ع</div>
@@ -672,7 +673,7 @@ function onScroll(){
 }
 addEventListener('scroll',onScroll,{passive:true});onScroll();
 function toggleMenu(){var n=document.querySelector('.nav-links');var open=n.classList.toggle('open');var b=document.getElementById('hamburger');if(b)b.setAttribute('aria-expanded',open?'true':'false');if(open)beepSafe(520);}
-function toggleDrop(e,id){try{if(e){e.preventDefault();e.stopPropagation();}}catch(_){}var w=document.getElementById(id);if(!w)return;var was=w.classList.contains('open');document.querySelectorAll('.has-drop.open').forEach(function(x){x.classList.remove('open');var btn=x.querySelector('.drop-toggle');if(btn)btn.setAttribute('aria-expanded','false');});if(!was){w.classList.add('open');var b=w.querySelector('.drop-toggle');if(b)b.setAttribute('aria-expanded','true');try{beepSafe(660);}catch(_){}}
+function toggleDrop(e,id){try{if(e){e.preventDefault();e.stopPropagation();}}catch(_){}var w=document.getElementById(id);if(!w)return;var was=w.classList.contains('open');document.querySelectorAll('.has-drop.open').forEach(function(x){x.classList.remove('open');var btn=x.querySelector('.drop-toggle');if(btn)btn.setAttribute('aria-expanded','false');});if(!was){w.classList.add('open');var b=w.querySelector('.drop-toggle');if(b)b.setAttribute('aria-expanded','true');try{beepSafe(660);}catch(_){}}}
 try{document.addEventListener('click',function(ev){if(!ev.target.closest||!ev.target.closest('.has-drop')){document.querySelectorAll('.has-drop.open').forEach(function(x){x.classList.remove('open');var btn=x.querySelector('.drop-toggle');if(btn)btn.setAttribute('aria-expanded','false');});}});}catch(_){}
 try{document.addEventListener('keydown',function(ev){if(ev.key==='Escape'){document.querySelectorAll('.has-drop.open').forEach(function(x){x.classList.remove('open');});}});}catch(_){}
 function beepSafe(f){try{if(typeof beep==='function')beep(f);}catch(e){}}
@@ -722,7 +723,11 @@ var url='https://wa.me/'+WA_NUMBER+'?text='+encodeURIComponent(text);
 var fb=document.getElementById('waFallback');if(fb){fb.href=url;fb.style.display='flex';}
 var t=document.getElementById('toast');t.textContent='ممنون '+name+'! دارم می‌برمت به واتساپ وکیل... فقط دکمه ارسال را بزن 📲';t.classList.add('show');f.reset();setTimeout(()=>t.classList.remove('show'),4500);
 try{if(typeof beep==='function')beep(880);}catch(_){}
-window.open(url,'_blank');return false}
+window.open(url,'_blank');return false;}
+</script>
+<script>
+/* loader failsafe (independent block: hides loader even if other scripts fail) */
+(function(){function hideLoader(){try{var l=document.getElementById('loader');if(l&&!l.classList.contains('hide')){l.classList.add('hide');setTimeout(function(){try{l.style.display='none';}catch(e){}},800);}}catch(e){}}try{window.addEventListener('load',function(){setTimeout(hideLoader,300);});}catch(e){}setTimeout(hideLoader,2200);setTimeout(hideLoader,4000);})();
 </script>
 <script>
 /* --- mehrieh calc: fast, offline, fa digits --- */
