@@ -74,24 +74,24 @@ footer a{color:var(--gold2)}
 </head>
 <body>
 <header><nav class="nav">
-<a class="brand" href="../../../"><div class="brand-mark">⚖</div><div><b>وکالت‌وند</b><span>دفتر وکالت مرتضی الماس‌پور | پایه یک دادگستری</span></div></a>
-<button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+<a class="brand" href="../../../"><div class="brand-mark"><i class="fa-solid fa-scale-balanced"></i></div><div><b>وکالت‌وند</b><span>دفتر وکالت مرتضی الماس‌پور | پایه یک دادگستری</span></div></a>
+<button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')"><i class="fa-solid fa-bars"></i></button>
 <div class="nav-links"><a href="../">فهرست مقالات مهریه</a><a href="../../">مرکز حقوقی</a><a href="../../../">صفحه اصلی</a><a class="btn-call" href="tel:09934164512">09934164512</a></div>
 </nav></header>
 <div class="hero"><div class="wrap">
 <div class="crumbs"><a href="../../../">صفحه اصلی</a> ← <a href="../../">مرکز حقوقی</a> ← <a href="../">مهریه</a> ← <b>راهنمای جامع</b></div>
 <h1>راهنمای جامع مهریه؛ <em>از تعیین تا مطالبه و دریافت</em></h1>
 <p>همه‌چیز درباره مهریه با زبان ساده، مثال واقعی و استناد دقیق به قانون — از لحظه تعیین در عقد تا آخرین ریال وصول.</p>
-<div class="meta"><span>✍️ تحریریه حقوقی وکالت‌وند</span><span>⏱ حدود ۱۲ دقیقه مطالعه</span><span>📅 به‌روزرسانی: آبان ۱۴۰۵</span></div>
+<div class="meta"><span><i class="fa-solid fa-pen-nib" style="color:var(--gold2)"></i> تحریریه حقوقی وکالت‌وند</span><span><i class="fa-solid fa-clock" style="color:var(--gold2)"></i> حدود ۱۲ دقیقه مطالعه</span><span><i class="fa-solid fa-calendar-days" style="color:var(--gold2)"></i> به‌روزرسانی: آبان ۱۴۰۵</span></div>
 </div></div>
 <section><div class="wrap">
 <div class="audio-card">
-<b>🔊 خلاصه صوتی مقاله با صدای گوینده مرد</b>
-<p>دکمه پخش را بزنید؛ خلاصه کاربردی مقاله را با صدای گوینده مرد حقوقی گوش دهید. فایل گویندگی حرفه‌ای همین‌جاست و اگر لود نشد، دستگاه شما می‌خواند.</p>
-<button class="play-btn" id="playBtn" onclick="toggleNarr()">▶️ پخش خلاصه صوتی</button>
-<div class="audio-status" id="audioStatus">آماده پخش | گوینده: مرد، لحن حقوقی مطمئن</div>
+<b><i class="fa-solid fa-microphone-lines" style="color:var(--gold2)"></i> نسخه صوتی تخصصی مقاله</b>
+<p>خلاصه حقوقی این راهنمای جامع را به‌صورت صوتی گوش دهید؛ روایت تخصصی و منطبق با متن کامل مقاله.</p>
+<button class="play-btn" id="playBtn" onclick="toggleNarr()"><i class="fa-solid fa-play"></i> پخش نسخه صوتی</button>
+<div class="audio-status" id="audioStatus">آماده پخش | روایت حقوقی رسمی</div>
 <audio id="narr" src="./audio.mp3" preload="auto" controls style="width:100%;margin-top:12px"></audio>
-<div style="margin-top:8px;font-size:.78rem"><a href="./audio.mp3" download style="color:var(--gold2)">⬇️ دانلود فایل صوتی (MP3)</a></div>
+<div style="margin-top:8px;font-size:.78rem"><a href="./audio.mp3" download style="color:var(--gold2)"><i class="fa-solid fa-download"></i> دانلود فایل صوتی (MP3)</a></div>
 </div>
 <div class="toc"><b>فهرست این راهنما:</b><ol>
 <li><a href="#s1">مهریه دقیقاً چیست و چه زمانی مال زن می‌شود؟</a></li>
@@ -145,7 +145,7 @@ footer a{color:var(--gold2)}
 <p>اگر مرد واقعاً توان پرداخت یکجا را نداشته باشد، دادخواست <b>اعسار</b> می‌دهد: با معرفی شهود و بررسی پرینت بانکی و اموال، دادگاه معمولاً پیش‌پرداخت + اقساط ماهانه تعیین می‌کند. اعسار نه فرار از دین است، نه پایان کار؛ فقط شیوه پرداخت را قسطی می‌کند.</p>
 <div class="law"><b>ماده ۲۲ قانون حمایت خانواده (۱۳۹۱):</b> هرگاه مهریه تا <b>۱۱۰ سکه</b> تمام بهار آزادی یا معادل آن باشد، وصول آن مشمول مقررات ماده ۳ قانون نحوه اجرای محکومیت‌های مالی است؛ یعنی در صورت عدم پرداخت و رد اعسار، امکان <b>حبس</b> (جلب) مرد وجود دارد. نسبت به <b>مازاد بر ۱۱۰ سکه</b>، حبس راه ندارد و فقط <b>ملائت (دارایی) مرد</b> ملاک وصول است.</div>
 <div class="ex"><b>مثال:</b> مهریه ۲۰۰ سکه است. زن برای ۱۱۰ سکه می‌تواند فشار حبس را داشته باشد، اما برای ۹۰ سکه مازاد باید ثابت کند مرد خانه دوم، مغازه یا حساب بانکی دارد تا توقیف شود. اگر مرد واقعاً چیزی ندارد، مازاد عملاً روی کاغذ می‌ماند.</div>
-<div class="warn"><b>⚠️ خبر مهم و به‌روز (شهریور ۱۴۰۵):</b> مجلس شورای اسلامی رأی داد سقف ۱۱۰ سکه به <b>۱۴ سکه</b> کاهش یابد؛ یعنی فقط تا ۱۴ سکه مشمول ضمانت حبس باشد و برای مازاد فقط ملائت ملاک باشد. اما توجه کنید: این مصوبه برای لازم‌الاجرا شدن باید به <b>تأیید شورای نگهبان</b> برسد و در روزنامه رسمی منتشر شود. <b>تا آن زمان، ملاک قانونی همان ۱۱۰ سکه است.</b> وضعیت را از همین صفحه و وکیل خود پیگیری کنید.</div>
+<div class="warn"><b><i class="fa-solid fa-triangle-exclamation"></i> یادداشت به‌روزرسانی (شهریور ۱۴۰۵):</b> مجلس شورای اسلامی رأی داد سقف ۱۱۰ سکه به <b>۱۴ سکه</b> کاهش یابد؛ یعنی فقط تا ۱۴ سکه مشمول ضمانت حبس باشد و برای مازاد فقط ملائت ملاک باشد. اما توجه کنید: این مصوبه برای لازم‌الاجرا شدن باید به <b>تأیید شورای نگهبان</b> برسد و در روزنامه رسمی منتشر شود. <b>تا آن زمان، ملاک قانونی همان ۱۱۰ سکه است.</b> وضعیت را از همین صفحه و وکیل خود پیگیری کنید.</div>
 <h2 id="s8">۸. پنج اشتباه مرگبار پرونده‌های مهریه</h2>
 <ol>
 <li><b>امضای رسید یا رضایت‌نامه بدون وکیل</b> — خیلی از مردها با یک «دست‌نوشته ساده» مهریه را بخشیده‌اند و بعد نتوانسته‌اند انکار کنند.</li>
@@ -155,12 +155,12 @@ footer a{color:var(--gold2)}
 <li><b>محاسبه اشتباه مبلغ</b> — مطالبه کمتر از حق (به‌ویژه در مهریه نقدی قدیمی) یعنی از دست دادن میلیون‌ها تومان.</li>
 </ol>
 <h2 id="s9">۹. تست حرفه‌ای خودسنجی</h2>
-<div class="quiz"><b>📝 ۵ سوال حرفه‌ای؛ روی هر سوال بزنید تا پاسخ تشریحی باز شود:</b>
-<details><summary>۱. زن دقیقاً از چه زمانی مالک مهریه می‌شود؟</summary><div class="ans">✅ به مجرد عقد (ماده ۱۰۸۲ قانون مدنی). شروع زندگی مشترک شرط مالکیت نیست؛ زن از لحظه عقد می‌تواند مطالبه کند.</div><div class="why">مستند: ماده ۱۰۸۲ — «به مجرد عقد، زن مالک مهر می‌شود». استثنا فقط طلاق قبل از نزدیکی (نصف مهر، ماده ۱۰۹۲) است.</div></details>
-<details><summary>۲. مهریه نقدی قدیمی ۵۰۰ هزار تومانی سال ۱۳۸۵ امروز چقدر می‌شود؟</summary><div class="ans">✅ با فرمول نرخ روز: مبلغ عقد × شاخص سال مطالبه ÷ شاخص سال عقد؛ در مثال مقاله حدود ۲۸ میلیون تومان.</div><div class="why">مستند: تبصره ماده ۱۰۸۲ (الحاقی ۱۳۷۶) + آیین‌نامه هیأت وزیران؛ ملاک شاخص بانک مرکزی است.</div></details>
-<details><summary>۳. برای وصول سریع بدون اختلاف، ثبت بهتر است یا دادگاه؟</summary><div class="ans">✅ اجرای ثبت. چون سند ازدواج سند رسمی لازم‌الاجراست، بدون دادخواست و جلسه، مستقیم اجراییه و توقیف می‌گیرید.</div><div class="why">اگر اختلاف روی اصل مهر (انکار، جعل، عندالاستطاعه) باشد، حتماً دادگاه خانواده.</div></details>
-<details><summary>۴. کدام اموال برای مهریه قابل توقیف نیست؟</summary><div class="ans">✅ مستثنیات دین ماده ۲۴ (منزل متناسب، اثاث ضروری، ابزار کار، حداقل معیشت از حقوق). بقیه دارایی — حساب، ملک دوم، خودروی غیرکاری — قابل توقیف است.</div><div class="why">سرعت در استعلام حیاتی است؛ تأخیر یعنی انتقال صوری و فرار از دین.</div></details>
-<details><summary>۵. آیا الان فقط تا ۱۴ سکه حبس دارد؟</summary><div class="ans">✅ خیر (آبان ۱۴۰۵). مصوبه کاهش ۱۱۰ به ۱۴ سکه هنوز به تأیید شورای نگهبان و روزنامه رسمی نرسیده؛ ملاک جاری ماده ۲۲ یعنی ۱۱۰ سکه است.</div><div class="why">برای ۱۱۰ سکه در صورت رد اعسار حبس ممکن است؛ مازاد فقط با اثبات ملائت وصول می‌شود.</div></details>
+<div class="quiz"><b><i class="fa-solid fa-file-lines" style="color:var(--gold2)"></i> خودسنجی تخصصی ـ ۵ پرسش همراه با پاسخ تشریحی:</b>
+<details><summary>۱. زن دقیقاً از چه زمانی مالک مهریه می‌شود؟</summary><div class="ans"><i class="fa-solid fa-circle-check"></i> به مجرد عقد (ماده ۱۰۸۲ قانون مدنی). شروع زندگی مشترک شرط مالکیت نیست؛ زن از لحظه عقد می‌تواند مطالبه کند.</div><div class="why">مستند: ماده ۱۰۸۲ — «به مجرد عقد، زن مالک مهر می‌شود». استثنا فقط طلاق قبل از نزدیکی (نصف مهر، ماده ۱۰۹۲) است.</div></details>
+<details><summary>۲. مهریه نقدی قدیمی ۵۰۰ هزار تومانی سال ۱۳۸۵ امروز چقدر می‌شود؟</summary><div class="ans"><i class="fa-solid fa-circle-check"></i> با فرمول نرخ روز: مبلغ عقد × شاخص سال مطالبه ÷ شاخص سال عقد؛ در مثال مقاله حدود ۲۸ میلیون تومان.</div><div class="why">مستند: تبصره ماده ۱۰۸۲ (الحاقی ۱۳۷۶) + آیین‌نامه هیأت وزیران؛ ملاک شاخص بانک مرکزی است.</div></details>
+<details><summary>۳. برای وصول سریع بدون اختلاف، ثبت بهتر است یا دادگاه؟</summary><div class="ans"><i class="fa-solid fa-circle-check"></i> اجرای ثبت. چون سند ازدواج سند رسمی لازم‌الاجراست، بدون دادخواست و جلسه، مستقیم اجراییه و توقیف می‌گیرید.</div><div class="why">اگر اختلاف روی اصل مهر (انکار، جعل، عندالاستطاعه) باشد، حتماً دادگاه خانواده.</div></details>
+<details><summary>۴. کدام اموال برای مهریه قابل توقیف نیست؟</summary><div class="ans"><i class="fa-solid fa-circle-check"></i> مستثنیات دین ماده ۲۴ (منزل متناسب، اثاث ضروری، ابزار کار، حداقل معیشت از حقوق). بقیه دارایی — حساب، ملک دوم، خودروی غیرکاری — قابل توقیف است.</div><div class="why">سرعت در استعلام حیاتی است؛ تأخیر یعنی انتقال صوری و فرار از دین.</div></details>
+<details><summary>۵. آیا الان فقط تا ۱۴ سکه حبس دارد؟</summary><div class="ans"><i class="fa-solid fa-circle-check"></i> خیر (آبان ۱۴۰۵). مصوبه کاهش ۱۱۰ به ۱۴ سکه هنوز به تأیید شورای نگهبان و روزنامه رسمی نرسیده؛ ملاک جاری ماده ۲۲ یعنی ۱۱۰ سکه است.</div><div class="why">برای ۱۱۰ سکه در صورت رد اعسار حبس ممکن است؛ مازاد فقط با اثبات ملائت وصول می‌شود.</div></details>
 </div>
 <h2 id="s10">۱۰. سوالات پرتکرار</h2>
 <div class="faq"><b>آیا زن بلافاصله بعد از عقد می‌تواند مهریه را بگیرد؟</b><p>بله. طبق ماده ۱۰۸۲ به مجرد عقد مالک است؛ مگر اینکه در عقد شرط پرداخت مدت‌دار شده باشد.</p></div>
@@ -168,11 +168,11 @@ footer a{color:var(--gold2)}
 <div class="faq"><b>ثبت سریع‌تر است یا دادگاه؟</b><p>اگر سند رسمی داری و اختلافی نیست، ثبت. اگر اختلاف، شرط خاص یا دعوای هم‌زمان داری، دادگاه.</p></div>
 <div class="faq"><b>آیا مهریه ۱۴ سکه شده است؟</b><p>خیر؛ فعلاً مصوبه مجلس است و تا تأیید نهایی و انتشار رسمی، قانون جاری همان ۱۱۰ سکه است.</p></div>
 <div class="cta">
-<b>⚖️ پرونده مهریه‌تان را به وکیل بسپارید، نه به شانس</b>
+<b><i class="fa-solid fa-scale-balanced" style="color:var(--gold2)"></i> پرونده مهریه‌تان را به وکیل بسپارید، نه به شانس</b>
 <p style="color:#e6d6b5">آقای مرتضی الماس‌پور با بیش از ۱۰۰ پرونده موفق خانواده، دقیق‌ترین مبلغ، سریع‌ترین مسیر (ثبت یا دادگاه) و بهترین راه وصول یا دفاع را برای شما مشخص می‌کند.</p>
-<a class="btn btn-gold" href="tel:09934164512">📞 مشاوره فوری: 09934164512</a>
-<a class="btn btn-wa" href="https://wa.me/989934164512">مشاوره واتساپی 📲</a><br>
-<a class="btn btn-dark" href="../../../#mehrieh">🧮 ماشین‌حساب مهریه به نرخ روز</a>
+<a class="btn btn-gold" href="tel:09934164512"><i class="fa-solid fa-phone"></i> مشاوره فوری: 09934164512</a>
+<a class="btn btn-wa" href="https://wa.me/989934164512"><i class="fa-brands fa-whatsapp"></i> مشاوره واتساپی</a><br>
+<a class="btn btn-dark" href="../../../#mehrieh"><i class="fa-solid fa-calculator"></i> ماشین‌حساب مهریه به نرخ روز</a>
 </div>
 <p class="disc">سلب مسئولیت: این مطلب آموزش عمومی است و مشاوره حقوقی محسوب نمی‌شود. مبلغ دقیق و استراتژی پرونده شما فقط با بررسی مدارک مشخص می‌شود. قوانین تا آبان ۱۴۰۵ بررسی شده‌اند؛ پیش از اقدام، آخرین وضعیت را با وکیل چک کنید.</p>
 <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px"><a class="btn btn-dark" href="../">→ بازگشت به فهرست مقالات مهریه</a><a class="btn btn-dark" href="../anvae-mahrieh/">مقاله بعدی: انواع مهریه ←</a></div>
@@ -189,9 +189,9 @@ function playTTS(){
     speechSynthesis.cancel();
     var u=new SpeechSynthesisUtterance(NARR_TEXT);u.lang='fa-IR';u.rate=0.95;
     try{var vs=speechSynthesis.getVoices();for(var i=0;i<vs.length;i++){if(vs[i].lang&&vs[i].lang.toLowerCase().indexOf('fa')===0){u.voice=vs[i];break;}}}catch(e){}
-    u.onend=function(){playing=false;btn.innerHTML='▶️ پخش خلاصه صوتی';st.textContent='پایان.';};
-    u.onerror=function(){playing=false;btn.innerHTML='▶️ پخش خلاصه صوتی';st.textContent='خطا در پخش. لطفاً فایل را دانلود کنید.';};
-    speechSynthesis.speak(u);playing=true;btn.innerHTML='⏸️ توقف';st.textContent='در حال پخش با صدای فارسی دستگاه شما… (فایل اصلی خطا داشت)';
+    u.onend=function(){playing=false;btn.innerHTML='<i class="fa-solid fa-play"></i> پخش نسخه صوتی';st.textContent='پایان.';};
+    u.onerror=function(){playing=false;btn.innerHTML='<i class="fa-solid fa-play"></i> پخش نسخه صوتی';st.textContent='خطا در پخش. لطفاً فایل را دانلود کنید.';};
+    speechSynthesis.speak(u);playing=true;btn.innerHTML='<i class="fa-solid fa-pause"></i> توقف پخش';st.textContent='در حال پخش با صدای فارسی دستگاه شما… (فایل اصلی خطا داشت)';
   }catch(e){st.textContent='مرورگر شما پخش صوتی را پشتیبانی نمی‌کند. لطفاً فایل را دانلود کنید.';}
 }
 function toggleNarr(){
@@ -199,17 +199,17 @@ function toggleNarr(){
     if(audioOK){
       st.textContent='در حال بارگذاری گویندگی حرفه‌ای…';
       try{
-        audio.onended=function(){playing=false;btn.innerHTML='▶️ پخش خلاصه صوتی';st.textContent='پایان.';};
+        audio.onended=function(){playing=false;btn.innerHTML='<i class="fa-solid fa-play"></i> پخش نسخه صوتی';st.textContent='پایان.';};
         audio.onerror=function(){audioOK=false;playTTS();};
         var pr=audio.play();
-        if(pr&&pr.then){pr.then(function(){playing=true;btn.innerHTML='⏸️ توقف';st.textContent='در حال پخش گویندگی حرفه‌ای…';}).catch(function(){audioOK=false;playTTS();});}
-        else{playing=true;btn.innerHTML='⏸️ توقف';st.textContent='در حال پخش گویندگی حرفه‌ای…';}
+        if(pr&&pr.then){pr.then(function(){playing=true;btn.innerHTML='<i class="fa-solid fa-pause"></i> توقف پخش';st.textContent='در حال پخش روایت تخصصی…';}).catch(function(){audioOK=false;playTTS();});}
+        else{playing=true;btn.innerHTML='<i class="fa-solid fa-pause"></i> توقف پخش';st.textContent='در حال پخش روایت تخصصی…';}
       }catch(e){audioOK=false;playTTS();}
     }else{playTTS();}
   }else{
     try{audio.pause();}catch(e){}
     try{speechSynthesis.cancel();}catch(e){}
-    playing=false;btn.innerHTML='▶️ پخش خلاصه صوتی';st.textContent='متوقف شد.';
+    playing=false;btn.innerHTML='<i class="fa-solid fa-play"></i> پخش نسخه صوتی';st.textContent='متوقف شد.';
   }
 }
 audio.addEventListener('canplay',function(){audioOK=true;});
