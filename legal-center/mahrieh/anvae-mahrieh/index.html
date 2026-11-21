@@ -90,7 +90,8 @@ footer a{color:var(--gold2)}
 <p>دکمه پخش را بزنید؛ خلاصه کاربردی مقاله را با صدای فارسی گوش دهید. فایل گویندگی حرفه‌ای همین‌جاست و اگر لود نشد، دستگاه شما می‌خواند.</p>
 <button class="play-btn" id="playBtn" onclick="toggleNarr()">▶️ پخش خلاصه صوتی</button>
 <div class="audio-status" id="audioStatus">آماده پخش | گوینده: مرد، لحن حقوقی مطمئن</div>
-<audio id="narr" src="./audio.mp3" preload="none"></audio>
+<audio id="narr" src="./audio.mp3" preload="auto" controls style="width:100%;margin-top:12px"></audio>
+<div style="margin-top:8px;font-size:.78rem"><a href="./audio.mp3" download style="color:var(--gold2)">⬇️ دانلود فایل صوتی (MP3)</a></div>
 </div>
 <div class="toc"><b>فهرست این مقاله:</b><ol>
 <li><a href="#s1">جواب ۳۰ ثانیه‌ای: کدام را انتخاب کنیم؟</a></li>
@@ -167,28 +168,40 @@ footer a{color:var(--gold2)}
 <footer>وکالت‌وند | مرتضی الماس‌پور، وکیل پایه یک دادگستری | <a href="tel:09934164512" dir="ltr">09934164512</a></footer>
 <script>
 var NARR_TEXT = "سلام، اینجا وکالت‌وند است. عندالمطالبه یعنی زن هر وقت بخواهد می‌تواند مهریه را بگیرد و مرد برای قسطی شدن باید اعسار خودش را ثابت کند. عندالاستطاعه یعنی اصل مهریه مال زن است، اما اجرا صبر می‌کند تا زن دارایی و استطاعت مالی مرد را ثابت کند. حق حبس فقط برای عندالمطالبه است. دادگاه در هر دو نوع حکم می‌دهد، اما اجرای عندالاستطاعه منوط به احراز ملائت است. پیشنهاد امروز وکلا: چهارده سکه عندالمطالبه و مازاد عندالاستطاعه. مصوبه چهارده سکه‌ای مجلس هنوز قانون نشده و ملاک همان صد و ده سکه است. جزئیات کامل، جدول مقایسه و تست‌ها را در همین صفحه بخوانید.";
-var playing=false, useAudio=false;
+var playing=false, audioOK=true;
 var audio=document.getElementById('narr'), btn=document.getElementById('playBtn'), st=document.getElementById('audioStatus');
-audio.addEventListener('error',function(){useAudio=false;});
-function pickVoice(){try{var vs=speechSynthesis.getVoices();for(var i=0;i<vs.length;i++){if(vs[i].lang&&vs[i].lang.toLowerCase().indexOf('fa')===0)return vs[i];}return null;}catch(e){return null;}}
+function playTTS(){
+  try{
+    try{audio.pause();}catch(e){}
+    if(typeof speechSynthesis==='undefined'){st.textContent='مرورگر شما پخش صوتی را پشتیبانی نمی‌کند. لطفاً فایل را دانلود کنید.';return;}
+    speechSynthesis.cancel();
+    var u=new SpeechSynthesisUtterance(NARR_TEXT);u.lang='fa-IR';u.rate=0.95;
+    try{var vs=speechSynthesis.getVoices();for(var i=0;i<vs.length;i++){if(vs[i].lang&&vs[i].lang.toLowerCase().indexOf('fa')===0){u.voice=vs[i];break;}}}catch(e){}
+    u.onend=function(){playing=false;btn.innerHTML='▶️ پخش خلاصه صوتی';st.textContent='پایان.';};
+    u.onerror=function(){playing=false;btn.innerHTML='▶️ پخش خلاصه صوتی';st.textContent='خطا در پخش. لطفاً فایل را دانلود کنید.';};
+    speechSynthesis.speak(u);playing=true;btn.innerHTML='⏸️ توقف';st.textContent='در حال پخش با صدای فارسی دستگاه شما… (فایل اصلی خطا داشت)';
+  }catch(e){st.textContent='مرورگر شما پخش صوتی را پشتیبانی نمی‌کند. لطفاً فایل را دانلود کنید.';}
+}
 function toggleNarr(){
   if(!playing){
-    if(useAudio||audio.getAttribute('data-ok')==='1'){audio.play();st.textContent='در حال پخش گویندگی حرفه‌ای…';btn.innerHTML='⏸️ توقف';playing=true;audio.onended=function(){playing=false;btn.innerHTML='▶️ پخش خلاصه صوتی';st.textContent='پایان.';};}
-    else{
+    if(audioOK){
+      st.textContent='در حال بارگذاری گویندگی حرفه‌ای…';
       try{
-        speechSynthesis.cancel();
-        var u=new SpeechSynthesisUtterance(NARR_TEXT);u.lang='fa-IR';u.rate=0.95;
-        var v=pickVoice();if(v)u.voice=v;
-        u.onend=function(){playing=false;btn.innerHTML='▶️ پخش خلاصه صوتی';st.textContent='پایان. (نسخه گویندگی حرفه‌ای در فایل صوتی همین صفحه است)';};
-        speechSynthesis.speak(u);playing=true;btn.innerHTML='⏸️ توقف';st.textContent='در حال پخش با صدای فارسی دستگاه شما…';
-      }catch(e){st.textContent='مرورگر شما پخش صوتی را پشتیبانی نمی‌کند.';}
-    }
+        audio.onended=function(){playing=false;btn.innerHTML='▶️ پخش خلاصه صوتی';st.textContent='پایان.';};
+        audio.onerror=function(){audioOK=false;playTTS();};
+        var pr=audio.play();
+        if(pr&&pr.then){pr.then(function(){playing=true;btn.innerHTML='⏸️ توقف';st.textContent='در حال پخش گویندگی حرفه‌ای…';}).catch(function(){audioOK=false;playTTS();});}
+        else{playing=true;btn.innerHTML='⏸️ توقف';st.textContent='در حال پخش گویندگی حرفه‌ای…';}
+      }catch(e){audioOK=false;playTTS();}
+    }else{playTTS();}
   }else{
-    try{audio.pause();speechSynthesis.cancel();}catch(e){}
+    try{audio.pause();}catch(e){}
+    try{speechSynthesis.cancel();}catch(e){}
     playing=false;btn.innerHTML='▶️ پخش خلاصه صوتی';st.textContent='متوقف شد.';
   }
 }
-audio.addEventListener('canplay',function(){audio.setAttribute('data-ok','1');});
+audio.addEventListener('canplay',function(){audioOK=true;});
+audio.addEventListener('error',function(){audioOK=false;});
 function toggleMenu(){var n=document.querySelector('.nav-links');if(n)n.classList.toggle('open');}
 </script>
 </body>
