@@ -211,8 +211,7 @@ var WA="989934164512";
 var _a="AQ.Ab8RN6JrO1vIe6oRk-2";
 var _b="ewt5hUO0ag0AebOjQDRsrxx2SDr_tyA";
 var KEY=_a+_b;
-var MODEL="gemini-2.5-flash-lite";
-var MODEL2="gemini-2.0-flash-lite";
+var MODELS=["gemini-3.5-flash-lite","gemini-3.5-flash","gemini-flash-lite-latest"];
 var SYS="تو «وکیل‌یار وکالت‌وند» هستی: دستیار حقوقی فارسی دفتر مرتضی الماس‌پور، وکیل پایه یک دادگستری. متخصص قوانین ایران.\n- فارسی روان، اول خلاصه بعد قدم‌به‌قدم بعد مدارک لازم و قدم بعدی.\n- شماره ماده را فقط وقتی مطمئنی بگو.\n- آخر جواب یک خط: این راهنمایی عمومی است و جایگزین مشاوره وکیل نیست.\n- حداکثر 300 کلمه مگر قرارداد خواسته شود.";
 var hist=[];
 var body=document.getElementById("chatBody"),inp=document.getElementById("chatIn");
@@ -221,7 +220,7 @@ function fmt(s){var h=esc(s);h=h.replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");h=h.repla
 function add(t,who,html){var d=document.createElement("div");d.className="msg "+who;if(html)d.innerHTML=t;else d.textContent=t;body.appendChild(d);body.scrollTop=body.scrollHeight;return d;}
 async function callGemini(q,past){
   var payload={system_instruction:{parts:[{text:SYS}]},contents:past.concat([{role:"user",parts:[{text:q}]}]),generationConfig:{temperature:0.4,maxOutputTokens:1500}};
-  var models=[MODEL,MODEL2,"gemini-2.0-flash","gemini-1.5-flash-latest"];
+  var models=MODELS;
   var lastErr="";
   for(var i=0;i<models.length;i++){
     try{
