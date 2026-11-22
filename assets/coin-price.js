@@ -1,7 +1,7 @@
-/* وکالت‌وند — بروزرسانی خودکار قیمت سکه (هر ۴ روز یکبار) */
+/* وکالت‌وند — بروزرسانی خودکار قیمت سکه (تلاش زنده در هر بازدید + ربات هر ۶ ساعت) */
 (function () {
   'use strict';
-  var CYCLE_DAYS = 4;
+  var CYCLE_DAYS = 1;
   var LS_KEY = 'vv-coin-price';
   var JSON_PATHS = [
     'assets/coin-price.json',
@@ -75,14 +75,14 @@
     } catch (e) {}
     if (typeof coinCalc === 'function') { try { coinCalc(); } catch (e) {} }
     // بج تاریخ
-    var txt = 'قیمت خودکار سکه: ' + fa(toman) + ' تومان' + (meta && meta.updated_at ? ' — بروزرسانی: ' + faDate(meta.updated_at) : '') + ' (هر ۴ روز)';
+    var txt = 'قیمت خودکار سکه: ' + fa(toman) + ' تومان' + (meta && meta.updated_at ? ' — بروزرسانی: ' + faDate(meta.updated_at) : '') + ' (خودکار)';
     document.querySelectorAll('[data-coin-date]').forEach(function (el) { el.textContent = txt; });
   }
   function paintBadge(meta, live) {
     var txt;
     if (meta && meta.price_toman) {
-      txt = 'قیمت خودکار سکه: ' + fa(meta.price_toman) + ' تومان — بروزرسانی: ' + faDate(meta.updated_at) + ' (هر ۴ روز)' + (live ? ' + نرخ زنده' : '');
-    } else txt = 'قیمت سکه به‌صورت خودکار هر ۴ روز به‌روز می‌شود';
+      txt = 'قیمت خودکار سکه: ' + fa(meta.price_toman) + ' تومان — بروزرسانی: ' + faDate(meta.updated_at) + ' (خودکار)' + (live ? ' + نرخ زنده' : '');
+    } else txt = 'قیمت سکه به‌صورت خودکار به‌روز می‌شود';
     document.querySelectorAll('[data-coin-date]').forEach(function (el) { el.textContent = txt; });
   }
   function init() {
@@ -90,14 +90,14 @@
       var cache = loadCache();
       var base = meta && meta.price_toman ? meta : (cache ? { price_toman: cache.price_toman, updated_at: cache.updated_at } : null);
       if (!base) { paintBadge(null); return; }
-      // اگر کش تازه‌تر از فایل است (کمتر از ۴ روز)، کش را مبنا بگذار
+      // اگر کش تازه‌تر از فایل است (کمتر از ۱ روز)، کش را مبنا بگذار
       var useCache = cache && daysSince(cache.updated_at) < CYCLE_DAYS && (!meta || cache.ts > +new Date(meta.updated_at));
       var active = useCache ? { price_toman: cache.price_toman, updated_at: cache.updated_at } : base;
       applyPrice(active.price_toman, active);
       paintBadge(active, false);
-      // اگر فایل قدیمی‌تر از ۴ روز است، یک تلاش زنده بکن (بدون بلاک کردن صفحه)
+      // در هر بازدید یک تلاش زنده بکن (بدون بلاک کردن صفحه)؛ اگر نشد، همان قیمت ذخیره‌شده می‌ماند
       var age = daysSince(active.updated_at);
-      if (age >= CYCLE_DAYS) {
+      if (true) {
         tryLive().then(function (live) {
           if (live && Math.abs(live - active.price_toman) / active.price_toman > 0.001) {
             var today = new Date().toISOString().slice(0, 10);
