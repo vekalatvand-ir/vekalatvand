@@ -43,7 +43,7 @@ async function answer(q){
   addWho(q,"vyU");
   hist.push({role:"user",text:q});
   var typing=addWho("⏳ دارم فکر می‌کنم...","vyB");
-  if(!GEMINI_KEY){typing.innerHTML='وکیل‌یار آنلاین نیست. برای وکیل در واتساپ پیام بفرستید:';return;}
+  if(!GEMINI_KEY){typing.innerHTML='وکیل‌یار آنلاین نیست. برای وکیل در واتساپ پیام بفرستید:<br><a class="vyWa" target="_blank" rel="noopener" href="https://wa.me/989934164512">ارسال به واتساپ وکیل</a>';return;}
   try{
     var past=hist.slice(-8,-1).map(function(m){return {role:m.role==="user"?"user":"model",parts:[{text:m.text}]};});
     var payload={system_instruction:{parts:[{text:SYS}]},contents:past.concat([{role:"user",parts:[{text:q}]}]),generationConfig:{temperature:0.4,maxOutputTokens:1500}};
