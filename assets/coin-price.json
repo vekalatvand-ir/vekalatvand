@@ -5,11 +5,11 @@
   "price_toman": 243155000,
   "price_rial": 2431550000,
   "updated_at": "2026-11-23",
-  "next_update_due": "2026-11-23T05:50:32Z",
+  "updated_at_tehran": "2026-11-23 01:21",
+  "updated_ts": 1795384291,
+  "next_update_due": "2026-11-23T05:51:31Z",
+  "update_cycle_hours": 8,
   "source": "tgju-profile-sekee",
   "source_url": "https://www.tgju.org/profile/sekee",
-  "note_fa": "قیمت خودکار هر ۸ ساعت به‌روز می‌شود. ملاک نهایی دادگاه، قیمت روز پرداخت است.",
-  "updated_at_tehran": "2026-11-23 01:20",
-  "updated_ts": 1795384232,
-  "update_cycle_hours": 8
+  "note_fa": "قیمت خودکار هر ۸ ساعت به‌روز می‌شود. ملاک نهایی دادگاه، قیمت روز پرداخت است."
 }
