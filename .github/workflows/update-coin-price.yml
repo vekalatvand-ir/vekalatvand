@@ -1,9 +1,9 @@
-name: update-coin-price (every 4 days)
+name: update-coin-price (every 6 hours)
 
 on:
   schedule:
-    # هر ۴ روز یکبار ساعت ۰۶:۰۰ تهران (۰۲:۳۰ UTC)
-    - cron: "30 2 */4 * *"
+    # هر ۶ ساعت یکبار
+    - cron: "0 */6 * * *"
   workflow_dispatch:
 
 permissions:
@@ -37,13 +37,13 @@ jobs:
               print("price out of range, abort without changes")
               raise SystemExit(0)
           today = datetime.date.today().isoformat()
-          due = (datetime.date.today() + datetime.timedelta(days=4)).isoformat()
+          due = (datetime.date.today() + datetime.timedelta(days=1)).isoformat()
           p = pathlib.Path("assets/coin-price.json")
           meta = {"symbol":"SEKE_EMAMI","label_fa":"سکه تمام بهار آزادی (امامی)","unit":"toman",
                   "price_toman":price_toman,"price_rial":price_toman*10,
-                  "updated_at":today,"next_update_due":due,"update_cycle_days":4,
+                  "updated_at":today,"next_update_due":due,"update_cycle_days":1,
                   "source":"tgju-profile-sekee","source_url":"https://www.tgju.org/profile/sekee",
-                  "note_fa":"قیمت خودکار هر ۴ روز یکبار به‌روز می‌شود. ملاک نهایی دادگاه، قیمت روز پرداخت است."}
+                  "note_fa":"قیمت چند بار در روز به‌صورت خودکار به‌روز می‌شود. ملاک نهایی دادگاه، قیمت روز پرداخت است."}
           p.write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
           print("wrote", p)
           # به‌روزرسانی مقدار پیش‌فرض در صفحه اصلی
