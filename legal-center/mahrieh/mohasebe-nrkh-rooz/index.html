@@ -123,13 +123,14 @@ footer a{color:var(--gold2)}
 </div></div>
 <section><div class="wrap">
 <div class="m4c-box" id="m4cBox">
-<div class="m4c-head"><span class="m4c-tag"><i class="fa-solid fa-calculator"></i> ماشین‌حساب لمسی مهریه</span><button class="m4c-sound on" id="m4cSound" type="button"><i class="fa-solid fa-volume-high"></i> صدا روشن</button></div>
-<p class="m4c-sub">بدون باز کردن کیبورد گوشی — با دکمه‌ها عدد بزن، هر دکمه صدای خودش را دارد</p>
+<div class="m4c-head"><span class="m4c-tag"><i class="fa-solid fa-calculator"></i> ماشین‌حساب لمسی مهریه</span><button class="m4c-sound on" id="m4cSound" type="button" data-vv-sound-btn><i class="fa-solid fa-volume-high"></i> صدا: خوب (طبیعی)</button></div>
+<p class="m4c-sub">بدون باز کردن کیبورد گوشی — با دکمه‌ها عدد بزن، هر دکمه صدای خودش را دارد (خوب/طبیعی یا مصنوعی/مینی‌رب)</p>
+<p data-coin-date style="text-align:center;font-size:.75rem;color:#b8a88f;margin:0 0 10px">قیمت سکه به‌صورت خودکار هر ۴ روز به‌روز می‌شود</p>
 <div class="m4c-tabs"><button class="m4c-tab active" id="m4cTabCoin" type="button"><i class="fa-solid fa-coins"></i> سکه</button><button class="m4c-tab" id="m4cTabCash" type="button"><i class="fa-solid fa-money-bill-wave"></i> وجه نقد</button></div>
 <div class="m4c-panel active" id="m4cPanelCoin">
 <div class="m4c-grid2">
 <div class="m4c-field active" id="m4cFCount"><label>تعداد سکه</label><div class="m4c-val" id="m4cCount">114</div></div>
-<div class="m4c-field" id="m4cFPrice"><label>قیمت هر سکه (تومان)</label><div class="m4c-val small" id="m4cPrice">95000000</div></div>
+<div class="m4c-field" id="m4cFPrice"><label>قیمت هر سکه (تومان) — خودکار هر ۴ روز</label><div class="m4c-val small" id="m4cPrice">243155000</div></div>
 </div>
 <div class="m4c-res"><span class="m4c-approx">مبلغ تقریبی — بر اساس قیمت امروز بازار</span><div class="m4c-big" id="m4cCoinOut">—</div><div class="m4c-sub2" id="m4cCoinSub"></div></div>
 </div>
@@ -280,15 +281,25 @@ audio.addEventListener('canplay',function(){audioOK=true;});
 audio.addEventListener('error',function(){audioOK=false;});
 function toggleMenu(){var n=document.querySelector('.nav-links');if(n)n.classList.toggle('open');}
 </script>
+<script src="../../../assets/calc-sound.js"></script>
+<script src="../../../assets/coin-price.js"></script>
 <script>
 (function(){
+window.__VV_SET_COIN=function(toman){try{S.vals.price=String(toman);render();}catch(e){}};
 var IDX={1340:0.04,1341:0.045,1342:0.05,1343:0.055,1344:0.06,1345:0.067,1346:0.074,1347:0.082,1348:0.092,1349:0.104,1350:0.118,1351:0.133,1352:0.15,1353:0.17,1354:0.195,1355:0.225,1356:0.26,1357:0.30,1358:0.35,1359:0.41,1360:0.47,1361:0.54,1362:0.62,1363:0.72,1364:0.84,1365:0.98,1366:1.14,1367:1.32,1368:1.52,1369:1.75,1370:2.0,1371:2.35,1372:2.75,1373:3.2,1374:3.75,1375:4.3,1376:4.85,1377:5.4,1378:6.3,1379:8.0,1380:11.9,1381:13.8,1382:15.9,1383:18.4,1384:21.2,1385:24.0,1386:28.5,1387:36.5,1388:45.0,1389:51.0,1390:57.5,1391:65.0,1392:72.0,1393:80.0,1394:90.0,1395:100.0,1396:109.6,1397:138.0,1398:187.0,1399:257.0,1400:365.0,1401:522.0,1402:740.0,1403:1020.0,1404:1350.0,1405:1650.0};
 var KF={1:1750,2:1850,3:1950,4:2050,5:2150,6:2250,7:2350,8:2450,9:2550,0:1650};
-var S={on:true,ac:null,active:'count',tab:'coin',vals:{count:'114',price:'95000000',amount:'1000000'},y0:1375,y1:1404};
+var S={on:true,ac:null,active:'count',tab:'coin',vals:{count:'114',price:'243155000',amount:'1000000'},y0:1375,y1:1404};
 function fa(n){try{return Math.round(n).toLocaleString('fa-IR')}catch(e){return String(Math.round(n))}}
 function faY(y){return String(y).replace(/\d/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'[d]})}
 function ac(){try{S.ac=S.ac||new (window.AudioContext||window.webkitAudioContext)();if(S.ac.state==='suspended')S.ac.resume();return S.ac}catch(e){return null}}
 function kbSound(k){
+  try{
+    if(window.VVSound){
+      if(!window.VVSound.isOn())return;
+      window.VVSound.play(k);
+      return;
+    }
+  }catch(e){}
   if(!S.on)return;var c=ac();if(!c)return;
   try{
     var t=c.currentTime;
@@ -299,12 +310,6 @@ function kbSound(k){
     o.type='square';o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(Math.max(300,f*0.55),t+dur);
     g.gain.setValueAtTime(0.06,t);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
     o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+dur+0.02);
-    var len=Math.floor(c.sampleRate*0.03),buf=c.createBuffer(1,len,c.sampleRate),d=buf.getChannelData(0);
-    for(var i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2);
-    var n=c.createBufferSource();n.buffer=buf;
-    var hp=c.createBiquadFilter();hp.type='highpass';hp.frequency.value=2500;
-    var ng=c.createGain();ng.gain.setValueAtTime(0.12,t);ng.gain.exponentialRampToValueAtTime(0.0001,t+0.03);
-    n.connect(hp);hp.connect(ng);ng.connect(c.destination);n.start(t);
   }catch(e){}
 }
 function render(){
@@ -357,10 +362,24 @@ document.getElementById('m4cY0m').addEventListener('click',function(){yStep(0,-1
 document.getElementById('m4cY0p').addEventListener('click',function(){yStep(0,1)});
 document.getElementById('m4cY1m').addEventListener('click',function(){yStep(1,-1)});
 document.getElementById('m4cY1p').addEventListener('click',function(){yStep(1,1)});
-document.getElementById('m4cSound').addEventListener('click',function(){
-  S.on=!S.on;this.innerHTML=S.on?'<i class="fa-solid fa-volume-high"></i> صدا روشن':'<i class="fa-solid fa-volume-xmark"></i> صدا خاموش';
-  this.classList.toggle('on',S.on);if(S.on)kbSound('T');
-});
+/* دکمه صدا: چرخه خوب (طبیعی) ← مصنوعی (مینی‌رب) ← بی‌صدا — توسط assets/calc-sound.js */
+(function(){
+  var btn=document.getElementById('m4cSound');
+  if(!btn)return;
+  btn.addEventListener('click',function(){
+    try{
+      if(window.VVSound){var m=window.VVSound.next();S.on=(m!=='off');return;}
+    }catch(e){}
+    S.on=!S.on;this.innerHTML=S.on?'<i class="fa-solid fa-volume-high"></i> صدا: خوب (طبیعی)':'<i class="fa-solid fa-volume-xmark"></i> بی‌صدا';
+    this.classList.toggle('on',S.on);if(S.on)kbSound('T');
+  });
+  // همگام‌سازی حالت ذخیره‌شده با موتور مشترک
+  try{
+    if(window.VVSound){S.on=window.VVSound.isOn();}
+    var saved=null;try{saved=localStorage.getItem('vv-sound-mode');}catch(e){}
+    if(saved==='off')S.on=false;
+  }catch(e){}
+})();
 document.addEventListener('keydown',function(e){
   var box=document.getElementById('m4cBox');if(!box)return;
   var r=box.getBoundingClientRect();
