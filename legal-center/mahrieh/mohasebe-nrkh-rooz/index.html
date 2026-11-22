@@ -73,6 +73,41 @@ footer{border-top:1px solid var(--line);padding:26px 20px;text-align:center;colo
 footer a{color:var(--gold2)}
 .disc{font-size:.78rem;color:var(--muted);border-top:1px dashed var(--line);margin-top:20px;padding-top:14px}
 </style>
+<style>
+.m4c-box{background:linear-gradient(180deg,#1e140a,#0f0a05);border:1px solid var(--gold);border-radius:22px;padding:24px 20px;margin:0 auto 14px;box-shadow:0 18px 50px rgba(0,0,0,.5)}
+.m4c-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.m4c-tag{display:inline-block;border:1px solid #c89b5a;color:#e8c88a;padding:6px 20px;border-radius:999px;font-size:.82rem;font-weight:800}
+.m4c-sound{background:#0c0804;border:1px solid var(--gold);color:var(--gold2);font-family:'Vazirmatn';font-size:.75rem;font-weight:700;border-radius:999px;padding:7px 16px;cursor:pointer}
+.m4c-sound.on{background:linear-gradient(145deg,#fff3d1,#c89b5a);color:#160e06;border:none;font-weight:900}
+.m4c-sub{color:var(--muted);font-size:.82rem;text-align:center;margin:8px 0 12px}
+.m4c-tabs{display:flex;gap:10px;justify-content:center;margin-bottom:14px}
+.m4c-tab{border:1px solid var(--line);background:#120c07;color:var(--gold2);font-family:'Vazirmatn';font-weight:900;font-size:.9rem;padding:10px 26px;border-radius:999px;cursor:pointer}
+.m4c-tab.active{background:linear-gradient(145deg,#f5e3b8,#c89b5a 60%,#7a4d1f);color:#160e06;border-color:var(--gold)}
+.m4c-tab:active{transform:scale(.96)}
+.m4c-panel{display:none}.m4c-panel.active{display:block}
+.m4c-grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.m4c-grid2{grid-template-columns:1fr}}
+.m4c-field{background:#0c0804;border:1px solid var(--line);border-radius:14px;padding:10px 14px;cursor:pointer;transition:.2s}
+.m4c-field.active{border-color:var(--gold);box-shadow:0 0 0 2px rgba(200,155,90,.35)}
+.m4c-field label{display:block;font-size:.75rem;color:var(--gold2);font-weight:800;margin-bottom:4px}
+.m4c-val{font-size:1.5rem;font-weight:900;color:#fff;letter-spacing:1px;min-height:44px;direction:ltr;text-align:center;font-variant-numeric:tabular-nums}
+.m4c-val.small{font-size:1.15rem}
+.m4c-years{display:flex;align-items:center;justify-content:center;gap:6px;direction:ltr}
+.m4c-yval{font-size:1.2rem;font-weight:900;color:#fff;min-width:64px;text-align:center}
+.m4c-ybtn{width:36px;height:36px;border-radius:10px;border:1px solid var(--gold);background:#1c130b;color:var(--gold2);font-size:1.2rem;font-weight:900;cursor:pointer;line-height:1}
+.m4c-ybtn:active{transform:scale(.9);background:var(--gold);color:#160e06}
+.m4c-ysep{color:var(--muted);font-size:.8rem}
+.m4c-keys{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.m4c-keys button{background:linear-gradient(180deg,#241708,#120c07);border:1px solid var(--gold);color:#f7f0e2;font-family:'Vazirmatn';font-size:1.5rem;font-weight:900;border-radius:14px;padding:14px 0;cursor:pointer;box-shadow:0 4px 0 #5c3a1c,0 8px 18px rgba(0,0,0,.5);transition:transform .06s,box-shadow .06s;user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.m4c-keys button:active{transform:translateY(4px);box-shadow:0 0 0 #5c3a1c;background:linear-gradient(145deg,#f5e3b8,#c89b5a);color:#160e06}
+.m4c-keys button.fn{background:#1c130b;color:var(--gold2);font-size:1.2rem}
+.m4c-res{margin-top:14px;background:#0a0705;border:1px dashed var(--gold);border-radius:16px;padding:18px;text-align:center}
+.m4c-approx{display:inline-block;background:rgba(200,155,90,.15);border:1px solid var(--gold);color:#e8c88a;font-size:.72rem;font-weight:800;padding:3px 14px;border-radius:999px;margin-bottom:8px}
+.m4c-big{font-family:'Lalezar';font-size:clamp(1.6rem,5vw,2.4rem);color:var(--gold2);line-height:1.6}
+.m4c-sub2{color:var(--muted);font-size:.8rem;margin-top:4px}
+.m4c-hint{color:var(--muted);font-size:.72rem;text-align:center;margin-top:10px}
+</style>
+
 </head>
 <body>
 <header><nav class="nav">
@@ -87,6 +122,33 @@ footer a{color:var(--gold2)}
 <div class="meta"><span><i class="fa-solid fa-pen-nib" style="color:var(--gold2)"></i> تحریریه حقوقی وکالت‌وند</span><span><i class="fa-solid fa-clock" style="color:var(--gold2)"></i> حدود ۱۰ دقیقه مطالعه</span><span><i class="fa-solid fa-calendar-days" style="color:var(--gold2)"></i> به‌روزرسانی: آبان ۱۴۰۵</span></div>
 </div></div>
 <section><div class="wrap">
+<div class="m4c-box" id="m4cBox">
+<div class="m4c-head"><span class="m4c-tag"><i class="fa-solid fa-calculator"></i> ماشین‌حساب لمسی مهریه</span><button class="m4c-sound on" id="m4cSound" type="button"><i class="fa-solid fa-volume-high"></i> صدا روشن</button></div>
+<p class="m4c-sub">بدون باز کردن کیبورد گوشی — با دکمه‌ها عدد بزن، هر دکمه صدای خودش را دارد</p>
+<div class="m4c-tabs"><button class="m4c-tab active" id="m4cTabCoin" type="button"><i class="fa-solid fa-coins"></i> سکه</button><button class="m4c-tab" id="m4cTabCash" type="button"><i class="fa-solid fa-money-bill-wave"></i> وجه نقد</button></div>
+<div class="m4c-panel active" id="m4cPanelCoin">
+<div class="m4c-grid2">
+<div class="m4c-field active" id="m4cFCount"><label>تعداد سکه</label><div class="m4c-val" id="m4cCount">114</div></div>
+<div class="m4c-field" id="m4cFPrice"><label>قیمت هر سکه (تومان)</label><div class="m4c-val small" id="m4cPrice">95000000</div></div>
+</div>
+<div class="m4c-res"><span class="m4c-approx">مبلغ تقریبی — بر اساس قیمت امروز بازار</span><div class="m4c-big" id="m4cCoinOut">—</div><div class="m4c-sub2" id="m4cCoinSub"></div></div>
+</div>
+<div class="m4c-panel" id="m4cPanelCash">
+<div class="m4c-grid2">
+<div class="m4c-field active" id="m4cFAmount"><label>مبلغ عقد (تومان)</label><div class="m4c-val small" id="m4cAmount">1000000</div></div>
+<div class="m4c-field"><label>سال عقد / مطالبه</label><div class="m4c-years"><button type="button" class="m4c-ybtn" id="m4cY0m">−</button><div class="m4c-yval" id="m4cY0">۱۳۷۵</div><button type="button" class="m4c-ybtn" id="m4cY0p">+</button><span class="m4c-ysep">←</span><button type="button" class="m4c-ybtn" id="m4cY1m">−</button><div class="m4c-yval" id="m4cY1">۱۴۰۴</div><button type="button" class="m4c-ybtn" id="m4cY1p">+</button></div></div>
+</div>
+<div class="m4c-res"><span class="m4c-approx">مبلغ تقریبی — شاخص میانگین بانک مرکزی</span><div class="m4c-big" id="m4cCashOut">—</div><div class="m4c-sub2" id="m4cCashSub"></div></div>
+</div>
+<div class="m4c-keys" id="m4cKeys">
+<button type="button" data-k="1">۱</button><button type="button" data-k="2">۲</button><button type="button" data-k="3">۳</button>
+<button type="button" data-k="4">۴</button><button type="button" data-k="5">۵</button><button type="button" data-k="6">۶</button>
+<button type="button" data-k="7">۷</button><button type="button" data-k="8">۸</button><button type="button" data-k="9">۹</button>
+<button type="button" data-k="C" class="fn">C</button><button type="button" data-k="0">۰</button><button type="button" data-k="B" class="fn">⌫</button>
+</div>
+<div class="m4c-hint">روی هر کادر عددی بزن تا فعال شود (قاب طلایی) — بعد با دکمه‌ها تایپ کن. کیبورد فیزیکی هم همین صداها را می‌دهد.</div>
+</div>
+
 <div class="audio-card">
 <b><i class="fa-solid fa-microphone-lines" style="color:var(--gold2)"></i> نسخه صوتی تخصصی مقاله</b>
 <p>خلاصه حقوقی این مقاله را به‌صورت صوتی گوش دهید؛ فرمول نرخ روز و تفاوت سکه و وجه نقد در کمتر از یک دقیقه.</p>
@@ -96,6 +158,7 @@ footer a{color:var(--gold2)}
 <div style="margin-top:8px;font-size:.78rem"><a href="./audio.mp3" download style="color:var(--gold2)"><i class="fa-solid fa-download"></i> دانلود فایل صوتی (MP3)</a></div>
 </div>
 <div class="toc"><b>فهرست این مقاله:</b><ol>
+<li><a href="#m4cBox">ماشین‌حساب لمسی مهریه (اول صفحه)</a></li>
 <li><a href="#s1">جواب ۳۰ ثانیه‌ای</a></li>
 <li><a href="#s2">مستند قانونی دقیق</a></li>
 <li><a href="#s3">فرمول دقیق محاسبه به نرخ روز</a></li>
@@ -217,5 +280,98 @@ audio.addEventListener('canplay',function(){audioOK=true;});
 audio.addEventListener('error',function(){audioOK=false;});
 function toggleMenu(){var n=document.querySelector('.nav-links');if(n)n.classList.toggle('open');}
 </script>
+<script>
+(function(){
+var IDX={1340:0.04,1341:0.045,1342:0.05,1343:0.055,1344:0.06,1345:0.067,1346:0.074,1347:0.082,1348:0.092,1349:0.104,1350:0.118,1351:0.133,1352:0.15,1353:0.17,1354:0.195,1355:0.225,1356:0.26,1357:0.30,1358:0.35,1359:0.41,1360:0.47,1361:0.54,1362:0.62,1363:0.72,1364:0.84,1365:0.98,1366:1.14,1367:1.32,1368:1.52,1369:1.75,1370:2.0,1371:2.35,1372:2.75,1373:3.2,1374:3.75,1375:4.3,1376:4.85,1377:5.4,1378:6.3,1379:8.0,1380:11.9,1381:13.8,1382:15.9,1383:18.4,1384:21.2,1385:24.0,1386:28.5,1387:36.5,1388:45.0,1389:51.0,1390:57.5,1391:65.0,1392:72.0,1393:80.0,1394:90.0,1395:100.0,1396:109.6,1397:138.0,1398:187.0,1399:257.0,1400:365.0,1401:522.0,1402:740.0,1403:1020.0,1404:1350.0,1405:1650.0};
+var KF={1:1750,2:1850,3:1950,4:2050,5:2150,6:2250,7:2350,8:2450,9:2550,0:1650};
+var S={on:true,ac:null,active:'count',tab:'coin',vals:{count:'114',price:'95000000',amount:'1000000'},y0:1375,y1:1404};
+function fa(n){try{return Math.round(n).toLocaleString('fa-IR')}catch(e){return String(Math.round(n))}}
+function faY(y){return String(y).replace(/\d/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'[d]})}
+function ac(){try{S.ac=S.ac||new (window.AudioContext||window.webkitAudioContext)();if(S.ac.state==='suspended')S.ac.resume();return S.ac}catch(e){return null}}
+function kbSound(k){
+  if(!S.on)return;var c=ac();if(!c)return;
+  try{
+    var t=c.currentTime;
+    var dur=0.07,f=KF[k]||2000;
+    if(k==='C'){f=900;dur=0.12} if(k==='B'){f=2900;dur=0.09}
+    if(k==='T'){f=2400;dur=0.1} if(k==='Y'){f=1500;dur=0.08}
+    var o=c.createOscillator(),g=c.createGain();
+    o.type='square';o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(Math.max(300,f*0.55),t+dur);
+    g.gain.setValueAtTime(0.06,t);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+dur+0.02);
+    var len=Math.floor(c.sampleRate*0.03),buf=c.createBuffer(1,len,c.sampleRate),d=buf.getChannelData(0);
+    for(var i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2);
+    var n=c.createBufferSource();n.buffer=buf;
+    var hp=c.createBiquadFilter();hp.type='highpass';hp.frequency.value=2500;
+    var ng=c.createGain();ng.gain.setValueAtTime(0.12,t);ng.gain.exponentialRampToValueAtTime(0.0001,t+0.03);
+    n.connect(hp);hp.connect(ng);ng.connect(c.destination);n.start(t);
+  }catch(e){}
+}
+function render(){
+  document.getElementById('m4cCount').textContent=S.vals.count||'۰';
+  document.getElementById('m4cPrice').textContent=S.vals.price||'۰';
+  document.getElementById('m4cAmount').textContent=S.vals.amount||'۰';
+  document.getElementById('m4cY0').textContent=faY(S.y0);
+  document.getElementById('m4cY1').textContent=faY(S.y1);
+  ['Count','Price','Amount'].forEach(function(x){
+    var map={Count:'count',Price:'price',Amount:'amount'};
+    document.getElementById('m4cF'+x).classList.toggle('active',S.active===map[x]);
+  });
+  var n=parseFloat(S.vals.count)||0,p=parseFloat(S.vals.price)||0,t=n*p;
+  document.getElementById('m4cCoinOut').textContent=t>0?fa(t)+' تومان':'—';
+  document.getElementById('m4cCoinSub').textContent=t>0?('تقریبی: '+fa(n)+' سکه × '+fa(p)+' تومان'):'عددها را با دکمه‌ها وارد کن';
+  var a=parseFloat(S.vals.amount)||0,i0=IDX[S.y0]||1,i1=IDX[S.y1]||1350,r=a*i1/i0;
+  document.getElementById('m4cCashOut').textContent=a>0?fa(r)+' تومان':'—';
+  document.getElementById('m4cCashSub').textContent=a>0?('تقریبی: '+fa(a)+' تومان سال '+faY(S.y0)+' × شاخص '+faY(S.y1)+' (ضریب '+(i1/i0).toFixed(1)+' برابر)'):'عدد را با دکمه‌ها وارد کن';
+}
+function press(k){
+  kbSound(k);
+  if(k==='C'){S.vals[S.active]='';render();return}
+  if(k==='B'){S.vals[S.active]=S.vals[S.active].slice(0,-1);render();return}
+  if(S.vals[S.active].length>=12)return;
+  if(S.vals[S.active]===''&&k==='0')return;
+  S.vals[S.active]+=k;render();
+}
+function setTab(w){
+  S.tab=w;kbSound('T');
+  document.getElementById('m4cTabCoin').classList.toggle('active',w==='coin');
+  document.getElementById('m4cTabCash').classList.toggle('active',w==='cash');
+  document.getElementById('m4cPanelCoin').classList.toggle('active',w==='coin');
+  document.getElementById('m4cPanelCash').classList.toggle('active',w==='cash');
+  S.active=(w==='coin')?'count':'amount';render();
+}
+function yStep(which,d){
+  kbSound('Y');
+  if(which===0){S.y0=Math.min(1405,Math.max(1340,S.y0+d))}else{S.y1=Math.min(1405,Math.max(1340,S.y1+d))}
+  render();
+}
+document.getElementById('m4cKeys').addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;press(b.getAttribute('data-k'));
+});
+document.getElementById('m4cFCount').addEventListener('click',function(){S.active='count';kbSound('0');render()});
+document.getElementById('m4cFPrice').addEventListener('click',function(){S.active='price';kbSound('5');render()});
+document.getElementById('m4cFAmount').addEventListener('click',function(){S.active='amount';kbSound('5');render()});
+document.getElementById('m4cTabCoin').addEventListener('click',function(){setTab('coin')});
+document.getElementById('m4cTabCash').addEventListener('click',function(){setTab('cash')});
+document.getElementById('m4cY0m').addEventListener('click',function(){yStep(0,-1)});
+document.getElementById('m4cY0p').addEventListener('click',function(){yStep(0,1)});
+document.getElementById('m4cY1m').addEventListener('click',function(){yStep(1,-1)});
+document.getElementById('m4cY1p').addEventListener('click',function(){yStep(1,1)});
+document.getElementById('m4cSound').addEventListener('click',function(){
+  S.on=!S.on;this.innerHTML=S.on?'<i class="fa-solid fa-volume-high"></i> صدا روشن':'<i class="fa-solid fa-volume-xmark"></i> صدا خاموش';
+  this.classList.toggle('on',S.on);if(S.on)kbSound('T');
+});
+document.addEventListener('keydown',function(e){
+  var box=document.getElementById('m4cBox');if(!box)return;
+  var r=box.getBoundingClientRect();
+  var vis=r.top<window.innerHeight&&r.bottom>0;if(!vis)return;
+  if(e.key>='0'&&e.key<='9'){press(e.key)}
+  else if(e.key==='Backspace'){press('B')}
+  else if(e.key==='Escape'||e.key==='Delete'){press('C')}
+});
+render();
+})();
+</script>
+
 </body>
 </html>
