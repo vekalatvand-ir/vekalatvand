@@ -208,9 +208,8 @@ footer{border-top:1px solid var(--line);padding:26px 20px;text-align:center;colo
 <script>
 (function(){
 var WA="989934164512";
-var _a="AQ.Ab8RN6JrO1vIe6oRk-2";
-var _b="ewt5hUO0ag0AebOjQDRsrxx2SDr_tyA";
-var KEY=_a+_b;
+// امنیت: کلید قبلاً اینجا بود و حذف شد. کلید جدید نسازید داخل فایل عمومی؛ از پروکسی سرور استفاده کنید.
+var KEY="";
 var MODELS=["gemini-3.5-flash-lite","gemini-3.5-flash","gemini-flash-lite-latest"];
 var SYS="تو «وکیل‌یار وکالت‌وند» هستی: دستیار حقوقی فارسی دفتر مرتضی الماس‌پور، وکیل پایه یک دادگستری. متخصص قوانین ایران.\n- فارسی روان، اول خلاصه بعد قدم‌به‌قدم بعد مدارک لازم و قدم بعدی.\n- شماره ماده را فقط وقتی مطمئنی بگو.\n- آخر جواب یک خط: این راهنمایی عمومی است و جایگزین مشاوره وکیل نیست.\n- حداکثر 300 کلمه مگر قرارداد خواسته شود.";
 var hist=[];
@@ -239,6 +238,7 @@ async function answer(q){
   add(q,"user");
   hist.push({role:"user",text:q});
   var typing=add("⏳ دارم فکر می‌کنم...","bot");
+  if(!KEY){typing.innerHTML='وکیل‌یار آنلاین نیست. سوالتان را مستقیم برای وکیل بفرستید:<br><a class="wa" target="_blank" rel="noopener" href="https://wa.me/989934164512">ارسال به واتساپ وکیل</a>';return;}
   try{
     var past=hist.slice(-8,-1).map(function(m){return {role:m.role==="user"?"user":"model",parts:[{text:m.text}]};});
     var t=await callGemini(q,past);
