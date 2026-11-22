@@ -425,7 +425,8 @@ footer b{color:var(--gold2);font-family:'Lalezar';font-size:1.4rem}
   <div class="wrap">
     <div class="sec-head reveal"><span class="sec-tag">ماشین حساب مهریه به نرخ روز</span><h2>مهریه‌ات <span>الان چقدر می‌ارزه؟</span> همین‌جا حساب کن</h2><div class="divider"></div><p>سکه و وجه نقد — بر اساس سال عقد تا ۱۴۰۵. نتیجه <b style="color:var(--gold2)">تقریبی</b> است و عدد دقیق دادگاه را وکیل مشخص می‌کند.</p></div>
     <div class="calc-box reveal">
-      <div class="sound-row"><button class="sound-toggle on" id="soundToggle" type="button"><i class="fa-solid fa-volume-high"></i> صدای دکمه‌ها روشن</button></div>
+      <div class="sound-row"><button class="sound-toggle on" id="soundToggle" type="button" data-vv-sound-btn><i class="fa-solid fa-volume-high"></i> صدا: خوب (طبیعی)</button></div>
+      <p data-coin-date style="text-align:center;font-size:.75rem;color:var(--muted);margin:6px 0 0">قیمت سکه به‌صورت خودکار هر ۴ روز به‌روز می‌شود</p>
       <div class="calc-tabs">
         <button class="calc-tab active" id="tabCoin" type="button"><i class="fa-solid fa-coins"></i> مهریه سکه طلا</button>
         <button class="calc-tab" id="tabCash" type="button"><i class="fa-solid fa-money-bill-wave"></i> مهریه وجه نقد</button>
@@ -433,7 +434,7 @@ footer b{color:var(--gold2);font-family:'Lalezar';font-size:1.4rem}
       <div class="calc-panel active" id="panelCoin">
         <div class="calc-grid">
           <div class="calc-field"><label for="coinCount">تعداد سکه (تمام بهار آزادی)</label><input id="coinCount" type="number" inputmode="numeric" min="0" value="114" oninput="coinCalc()"></div>
-          <div class="calc-field"><label for="coinPrice">قیمت امروز هر سکه (تومان) — قابل ویرایش</label><input id="coinPrice" type="number" inputmode="numeric" min="0" value="95000000" oninput="coinCalc()"></div>
+          <div class="calc-field"><label for="coinPrice">قیمت امروز هر سکه (تومان) — خودکار هر ۴ روز، قابل ویرایش</label><input id="coinPrice" type="number" inputmode="numeric" min="0" value="243155000" oninput="coinCalc()"></div>
         </div>
         <div class="calc-result"><span class="approx"><i class="fa-solid fa-triangle-exclamation"></i> مبلغ تقریبی — بر اساس قیمت امروز بازار</span><div class="big" id="coinOut">—</div><div class="sub" id="coinSub"></div></div>
       </div>
@@ -730,19 +731,22 @@ window.open(url,'_blank');return false;}
 /* loader failsafe (independent block: hides loader even if other scripts fail) */
 (function(){function hideLoader(){try{var l=document.getElementById('loader');if(l&&!l.classList.contains('hide')){l.classList.add('hide');setTimeout(function(){try{l.style.display='none';}catch(e){}},800);}}catch(e){}}try{window.addEventListener('load',function(){setTimeout(hideLoader,300);});}catch(e){}setTimeout(hideLoader,2200);setTimeout(hideLoader,4000);})();
 </script>
+<script src="./assets/calc-sound.js"></script>
+<script src="./assets/coin-price.js"></script>
 <script>
 /* --- mehrieh calc: fast, offline, fa digits --- */
 var MEHR_IDX={1340:0.04,1341:0.045,1342:0.05,1343:0.055,1344:0.06,1345:0.067,1346:0.074,1347:0.082,1348:0.092,1349:0.104,1350:0.118,1351:0.133,1352:0.15,1353:0.17,1354:0.195,1355:0.225,1356:0.26,1357:0.30,1358:0.35,1359:0.41,1360:0.47,1361:0.54,1362:0.62,1363:0.72,1364:0.84,1365:0.98,1366:1.14,1367:1.32,1368:1.52,1369:1.75,1370:2.0,1371:2.35,1372:2.75,1373:3.2,1374:3.75,1375:4.3,1376:4.85,1377:5.4,1378:6.3,1379:8.0,1380:11.9,1381:13.8,1382:15.9,1383:18.4,1384:21.2,1385:24.0,1386:28.5,1387:36.5,1388:45.0,1389:51.0,1390:57.5,1391:65.0,1392:72.0,1393:80.0,1394:90.0,1395:100.0,1396:109.6,1397:138.0,1398:187.0,1399:257.0,1400:365.0,1401:522.0,1402:740.0,1403:1020.0,1404:1350.0,1405:1650.0};
 var faNum=function(n){try{return Math.round(n).toLocaleString('fa-IR')}catch(e){return n}};
-var soundOn=true, AC=null;
-function beep(f){if(!soundOn)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();var o=AC.createOscillator(),g=AC.createGain();o.type='sine';o.frequency.value=f||660;g.gain.value=0.08;o.connect(g);g.connect(AC.destination);o.start();g.gain.exponentialRampToValueAtTime(0.0001,AC.currentTime+0.12);o.stop(AC.currentTime+0.13);}catch(e){}}
-function clickSnd(){beep(720);setTimeout(function(){beep(520)},70)}
+/* صدا از موتور مشترک VVSound (خوب/طبیعی + مصنوعی/مینی‌رب) می‌آید */
+function beep(f){try{if(window.VVSound)window.VVSound.play('T');}catch(e){}}
+function clickSnd(){try{if(window.VVSound)window.VVSound.play('T');}catch(e){}}
 (function initMehr(){
   var y=document.getElementById('cashYear');if(!y)return;
   var html='';for(var yr=1405;yr>=1340;yr--){var fa=yr.toString().replace(/\d/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'[d]});html+='<option value="'+yr+'"'+(yr===1375?' selected':'')+'>'+fa+'</option>';}
   y.innerHTML=html;
   document.getElementById('cashNow').addEventListener('change',function(){clickSnd();cashCalc();});
-  document.getElementById('soundToggle').addEventListener('click',function(){soundOn=!soundOn;this.innerHTML=soundOn?'<i class="fa-solid fa-volume-high"></i> صدای دکمه‌ها روشن':'<i class="fa-solid fa-volume-xmark"></i> صدای دکمه‌ها خاموش';this.classList.toggle('on',soundOn);if(soundOn)beep(660);});
+  /* دکمه صدا توسط assets/calc-sound.js (data-vv-sound-btn) مدیریت می‌شود؛ اینجا فقط سازگاری */
+  try{var st=document.getElementById('soundToggle');if(st&&!st.hasAttribute('data-vv-sound-btn')){st.setAttribute('data-vv-sound-btn','');}}catch(e){}
   document.getElementById('tabCoin').addEventListener('click',function(){clickSnd();switchTab('coin');});
   document.getElementById('tabCash').addEventListener('click',function(){clickSnd();switchTab('cash');});
   document.querySelectorAll('.calc-box .btn').forEach(function(b){b.addEventListener('click',function(){beep(880)});});
