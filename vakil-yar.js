@@ -4,7 +4,7 @@ var WA="989934164512";
 var _a="AQ.Ab8RN6JrO1vIe6oRk-2";
 var _b="ewt5hUO0ag0AebOjQDRsrxx2SDr_tyA";
 var GEMINI_KEY=_a+_b;
-var MODEL="gemini-3.5-flash-lite";
+var MODELS=["gemini-3.5-flash-lite","gemini-3.5-flash","gemini-flash-lite-latest"];
 var SYS="تو «وکیل‌یار وکالت‌وند» هستی: دستیار حقوقی فارسی دفتر مرتضی الماس‌پور، وکیل پایه یک دادگستری (بیش از ۱۰ سال تجربه، ۱۰۰+ پرونده موفق). متخصص قوانین ایران (مدنی، کیفری، خانواده، کار، تجارت، آیین دادرسی).\nقواعد:\n- فارسی روان، دقیق و کاربردی جواب بده. اول خلاصه، بعد قدم‌به‌قدم، بعد مدارک لازم و قدم بعدی.\n- اگر اسم خودت را پرسیدند بگو: من وکیل‌یار وکالت‌وند هستم، دستیار هوشمند دفتر مرتضی الماس‌پور.\n- شماره ماده را فقط وقتی مطمئنی بگو، وگرنه کلی بگو.\n- در انتهای جواب یک خط بگو: این راهنمایی عمومی است و جایگزین مشاوره وکیل نیست. برای پرونده‌تان در واتساپ پیام دهید.\n- جواب کوتاه و مفید بده (حداکثر ۳۰۰ کلمه) مگر قرارداد/لایحه خواسته شود.";
 var hist=[];
 var css="#vyFab{position:fixed;left:16px;bottom:148px;z-index:980;width:58px;height:58px;border-radius:50%;border:2px solid #f5e3b8;background:linear-gradient(145deg,#fff3d1,#c89b5a 60%,#7a4d1f);color:#1a120b;font-size:26px;cursor:pointer;box-shadow:0 12px 30px rgba(200,155,90,.5);display:grid;place-items:center;font-family:inherit}"
@@ -42,11 +42,20 @@ async function answer(q){
   var typing=addWho("⏳ جمینای داره فکر می‌کنه...","vyB");
   try{
     var past=hist.slice(-8,-1).map(function(m){return {role:m.role==="user"?"user":"model",parts:[{text:m.text}]};});
-    var url="https://generativelanguage.googleapis.com/v1beta/models/"+MODEL+":generateContent?key="+encodeURIComponent(GEMINI_KEY);
-    var res=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({system_instruction:{parts:[{text:SYS}]},contents:past.concat([{role:"user",parts:[{text:q}]}]),generationConfig:{temperature:0.4,maxOutputTokens:1500}})});
-    var j=await res.json();
-    if(!res.ok) throw new Error((j.error&&j.error.message)||("خطای "+res.status));
-    var t=(j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts||[]).map(function(x){return x.text||"";}).join("")||"پاسخی نگرفتم.";
+    var payload={system_instruction:{parts:[{text:SYS}]},contents:past.concat([{role:"user",parts:[{text:q}]}]),generationConfig:{temperature:0.4,maxOutputTokens:1500}};
+    var lastErr="";var t="";
+    for(var i=0;i<MODELS.length;i++){
+      try{
+        var url="https://generativelanguage.googleapis.com/v1beta/models/"+MODELS[i]+":generateContent?key="+encodeURIComponent(GEMINI_KEY);
+        var res=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+        var j=await res.json();
+        if(!res.ok) throw new Error((j.error&&j.error.message)||("خطای "+res.status));
+        t=(j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts||[]).map(function(x){return x.text||"";}).join("")||"";
+        if(t) break;
+        lastErr="پاسخ خالی";
+      }catch(e){lastErr=e.message;}
+    }
+    if(!t) throw new Error(lastErr||"خطا در اتصال");
     hist.push({role:"ai",text:t});
     typing.innerHTML=fmt(t)+'<br><a class="vyWa" target="_blank" rel="noopener" href="https://wa.me/'+WA+'?text='+encodeURIComponent("سلام، سوال من درباره: "+q)+'">مشاوره واتساپ با وکیل</a><div class="vyDis">توجه: این راهنمایی عمومی با هوش مصنوعی است و مشاوره حقوقی محسوب نمی‌شود.</div><div class="vyPow">⚡ Powered by Gemini</div>';
     body.scrollTop=body.scrollHeight;
