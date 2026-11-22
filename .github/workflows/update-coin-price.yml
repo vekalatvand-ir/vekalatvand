@@ -1,9 +1,10 @@
-name: update-coin-price (every 6 hours)
+name: update-coin-price (every 8 hours)
 
 on:
   schedule:
-    # هر ۶ ساعت یکبار
-    - cron: "0 */6 * * *"
+    # هر ۸ ساعت یکبار: 00:05، 08:05، 16:05 UTC
+    # = 03:35، 11:35، 19:35 به وقت تهران
+    - cron: "5 */8 * * *"
   workflow_dispatch:
 
 permissions:
@@ -20,47 +21,121 @@ jobs:
       - name: Fetch sekee price and update files
         run: |
           python3 - <<'PY'
-          import re, json, urllib.request, datetime, pathlib
-          UA = {"User-Agent": "Mozilla/5.0 (Linux; Android 10) VekalatvandBot/1.0"}
-          price_toman = None
-          try:
-              req = urllib.request.Request("https://www.tgju.org/profile/sekee", headers=UA)
-              html = urllib.request.urlopen(req, timeout=25).read().decode("utf-8", "ignore")
-              m = re.search(r'data-col="info\.last_trade\.PDrCotVal">([\d,]+)<', html)
-              if m:
-                  rial = int(m.group(1).replace(",", ""))
-                  price_toman = round(rial / 10)
-          except Exception as e:
-              print("fetch failed:", e)
-          print("price_toman=", price_toman)
-          if not price_toman or not (20000000 < price_toman < 1000000000):
+          import re, json, urllib.request, datetime, pathlib, time
+          from collections import Counter
+
+          URL = "https://www.tgju.org/profile/sekee"
+          UAS = [
+              "Mozilla/5.0 (Linux; Android 10) VekalatvandBot/1.0",
+              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
+          ]
+          PATTERNS = [
+              r'data-col="info\.last_trade\.PDrCotVal">([\d,]+)<',
+              r'PDrCotVal[^0-9]*([\d,]{5,})<',
+              r'"pdrCotVal"\s*:\s*"([\d,]+)"',
+          ]
+
+          def fetch_html():
+              last_err = None
+              for attempt in range(3):
+                  ua = UAS[attempt % len(UAS)]
+                  try:
+                      req = urllib.request.Request(URL, headers={"User-Agent": ua, "Accept-Language": "fa-IR,fa;q=0.9,en;q=0.8"})
+                      html = urllib.request.urlopen(req, timeout=25).read().decode("utf-8", "ignore")
+                      if "PDrCotVal" in html and len(html) > 50000:
+                          return html
+                      last_err = "unexpected body len=%d" % len(html)
+                  except Exception as e:
+                      last_err = e
+                      print(f"attempt {attempt+1} failed: {e}")
+                  time.sleep(3)
+              print("all fetch attempts failed, last:", last_err)
+              return None
+
+          def extract_rial(html):
+              votes = []
+              for pat in PATTERNS:
+                  for m in re.findall(pat, html):
+                      try:
+                          v = int(m.replace(",", ""))
+                          if 200_000_000 < v < 10_000_000_000:
+                              votes.append(v)
+                      except Exception:
+                          pass
+              if not votes:
+                  return None
+              # رای اکثریت: دقیق‌ترین عدد (تکرارشده‌ترین) مبناست
+              common = Counter(votes).most_common(1)[0][0]
+              return common
+
+          html = fetch_html()
+          if not html:
+              print("fetch failed: no html, abort without changes")
+              raise SystemExit(0)
+          rial = extract_rial(html)
+          print("rial =", rial)
+          price_toman = round(rial / 10) if rial else None
+          print("price_toman =", price_toman)
+          if not price_toman or not (20_000_000 < price_toman < 1_000_000_000):
               print("price out of range, abort without changes")
               raise SystemExit(0)
-          today = datetime.date.today().isoformat()
-          due = (datetime.date.today() + datetime.timedelta(days=1)).isoformat()
+
+          # محافظ جهش غیرعادی نسبت به قیمت قبلی (خطای اسکرپ)
           p = pathlib.Path("assets/coin-price.json")
-          meta = {"symbol":"SEKE_EMAMI","label_fa":"سکه تمام بهار آزادی (امامی)","unit":"toman",
-                  "price_toman":price_toman,"price_rial":price_toman*10,
-                  "updated_at":today,"next_update_due":due,"update_cycle_days":1,
-                  "source":"tgju-profile-sekee","source_url":"https://www.tgju.org/profile/sekee",
-                  "note_fa":"قیمت چند بار در روز به‌صورت خودکار به‌روز می‌شود. ملاک نهایی دادگاه، قیمت روز پرداخت است."}
+          prev = None
+          if p.exists():
+              try:
+                  prev = json.loads(p.read_text(encoding="utf-8")).get("price_toman")
+              except Exception:
+                  pass
+          if prev and abs(price_toman - prev) / prev > 0.20:
+              print(f"WARN: abnormal jump prev={prev} new={price_toman} (>20%), abort without changes")
+              raise SystemExit(0)
+
+          # زمان تهران (UTC+3:30)
+          now_utc = datetime.datetime.now(datetime.timezone.utc)
+          tehran = now_utc + datetime.timedelta(hours=3, minutes=30)
+          today = tehran.date().isoformat()
+          ts = int(now_utc.timestamp())
+          due = (now_utc + datetime.timedelta(hours=8)).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+          meta = {
+              "symbol": "SEKE_EMAMI",
+              "label_fa": "سکه تمام بهار آزادی (امامی)",
+              "unit": "toman",
+              "price_toman": price_toman,
+              "price_rial": price_toman * 10,
+              "updated_at": today,
+              "updated_at_tehran": tehran.strftime("%Y-%m-%d %H:%M"),
+              "updated_ts": ts,
+              "next_update_due": due,
+              "update_cycle_hours": 8,
+              "source": "tgju-profile-sekee",
+              "source_url": URL,
+              "note_fa": "قیمت خودکار هر ۸ ساعت به‌روز می‌شود. ملاک نهایی دادگاه، قیمت روز پرداخت است."
+          }
           p.write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
-          print("wrote", p)
+          print("wrote", p, price_toman)
+
           # به‌روزرسانی مقدار پیش‌فرض در صفحه اصلی
           idx = pathlib.Path("index.html")
           if idx.exists():
               t = idx.read_text(encoding="utf-8")
               t2 = re.sub(r'(id="coinPrice"[^>]*?value=")\d+(")', r'\g<1>%d\g<2>' % price_toman, t)
+              t2 = t2.replace("خودکار هر ۴ روز", "خودکار هر ۸ ساعت").replace("هر ۴ روز به‌روز می‌شود", "هر ۸ ساعت به‌روز می‌شود")
               if t2 != t:
                   idx.write_text(t2, encoding="utf-8")
                   print("patched index.html default")
+
           # به‌روزرسانی مقدار پیش‌فرض در صفحه محاسبه نرخ روز (بخش چهارم مهریه)
           m4 = pathlib.Path("legal-center/mahrieh/mohasebe-nrkh-rooz/index.html")
           if m4.exists():
               t = m4.read_text(encoding="utf-8")
               t2 = re.sub(r'(id="m4cPrice"[^>]*>)\d+(<)', r'\g<1>%d\g<2>' % price_toman, t)
               t2 = re.sub(r"(vals:\{count:'114',price:')\d+(')", r'\g<1>%d\g<2>' % price_toman, t2)
-              t2 = re.sub(r"(price:'?)\d+('?,)", r'\g<1>%d\g<2>' % price_toman, t2)
+              # فقط price داخل vals را بزن (نه amount و نه year اعداد دیگر)
+              t2 = re.sub(r"(\bprice:')\d+(')", r'\g<1>%d\g<2>' % price_toman, t2)
+              t2 = t2.replace("خودکار هر ۴ روز", "خودکار هر ۸ ساعت").replace("هر ۴ روز به‌روز می‌شود", "هر ۸ ساعت به‌روز می‌شود")
               if t2 != t:
                   m4.write_text(t2, encoding="utf-8")
                   print("patched mohasebe page default")
@@ -70,4 +145,4 @@ jobs:
           git config user.name "vekalatvand-bot"
           git config user.email "bot@vekalatvand.local"
           git add assets/coin-price.json index.html legal-center/mahrieh/mohasebe-nrkh-rooz/index.html || true
-          git diff --cached --quiet && echo "no changes" || (git commit -m "auto: update coin price (4-day cycle)" && git push)
+          git diff --cached --quiet && echo "no changes" || (git commit -m "auto: update coin price (8h cycle)" && git push)
