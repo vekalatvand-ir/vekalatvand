@@ -1,9 +1,12 @@
 (function(){
 "use strict";
 var WA="989934164512";
-var _a="AQ.Ab8RN6JrO1vIe6oRk-2";
-var _b="ewt5hUO0ag0AebOjQDRsrxx2SDr_tyA";
-var GEMINI_KEY=_a+_b;
+// امنیت: کلید Gemini نباید داخل سایت عمومی (گیت‌هاب) باشد، چون هر بازدیدکننده می‌تواند آن را کپی و سهمیه شما را مصرف کند.
+// این فایل عمداً بدون کلید منتشر می‌شود. برای فعال‌سازی وکیل‌یار:
+// ۱) در Google AI Studio کلید قبلی را حذف/Revoke کنید و یک کلید جدید با محدودیت HTTP Referrer بسازید،
+// ۲) یا بهتر: یک پروکسی سمت سرور بسازید و فقط از آن صدا بزنید.
+// تا وقتی کلید تنظیم نشده، وکیل‌یار مستقیم دکمه واتساپ را نشان می‌دهد و چیزی لو نمی‌رود.
+var GEMINI_KEY="";
 var MODELS=["gemini-3.5-flash-lite","gemini-3.5-flash","gemini-flash-lite-latest"];
 var SYS="تو «وکیل‌یار وکالت‌وند» هستی: دستیار حقوقی فارسی دفتر مرتضی الماس‌پور، وکیل پایه یک دادگستری (بیش از ۱۰ سال تجربه، ۱۰۰+ پرونده موفق). متخصص قوانین ایران (مدنی، کیفری، خانواده، کار، تجارت، آیین دادرسی).\nقواعد:\n- فارسی روان، دقیق و کاربردی جواب بده. اول خلاصه، بعد قدم‌به‌قدم، بعد مدارک لازم و قدم بعدی.\n- اگر اسم خودت را پرسیدند بگو: من وکیل‌یار وکالت‌وند هستم، دستیار هوشمند دفتر مرتضی الماس‌پور.\n- شماره ماده را فقط وقتی مطمئنی بگو، وگرنه کلی بگو.\n- در انتهای جواب یک خط بگو: این راهنمایی عمومی است و جایگزین مشاوره وکیل نیست. برای پرونده‌تان در واتساپ پیام دهید.\n- جواب کوتاه و مفید بده (حداکثر ۳۰۰ کلمه) مگر قرارداد/لایحه خواسته شود.";
 var hist=[];
@@ -39,7 +42,8 @@ function addWho(text,who,html){var d=document.createElement("div");d.className="
 async function answer(q){
   addWho(q,"vyU");
   hist.push({role:"user",text:q});
-  var typing=addWho("⏳ جمینای داره فکر می‌کنه...","vyB");
+  var typing=addWho("⏳ دارم فکر می‌کنم...","vyB");
+  if(!GEMINI_KEY){typing.innerHTML='وکیل‌یار آنلاین نیست. برای وکیل در واتساپ پیام بفرستید:';return;}
   try{
     var past=hist.slice(-8,-1).map(function(m){return {role:m.role==="user"?"user":"model",parts:[{text:m.text}]};});
     var payload={system_instruction:{parts:[{text:SYS}]},contents:past.concat([{role:"user",parts:[{text:q}]}]),generationConfig:{temperature:0.4,maxOutputTokens:1500}};
@@ -63,7 +67,7 @@ async function answer(q){
     typing.innerHTML='موقتاً وصل نشدم ('+esc(e.message)+'). سوالتان را مستقیم برای وکیل بفرستید:<br><a class="vyWa" target="_blank" rel="noopener" href="https://wa.me/'+WA+'?text='+encodeURIComponent("سلام، سوال حقوقی من: "+q)+'">ارسال به واتساپ وکیل</a>';
   }
 }
-fab.onclick=function(){panel.classList.toggle("open");if(panel.classList.contains("open")&&!body.children.length){addWho("سلام! من <b>وکیل‌یار وکالت‌وند</b> هستم 🤝<br>حالا با <b>Gemini</b> جواب می‌دهم، نه کلمه‌کلیدی! درباره مهریه، طلاق، چک، کیفری، ملکی... بپرسید.<div class='vyDis'>پاسخ‌ها با هوش مصنوعی + اطلاعات عمومی است.</div>","vyB",true);}};
+fab.onclick=function(){panel.classList.toggle("open");if(panel.classList.contains("open")&&!body.children.length){addWho("سلام! من <b>وکیل‌یار وکالت‌وند</b> هستم 🤝<br>اینجا سوالتان را بنویسید، نه کلمه‌کلیدی! درباره مهریه، طلاق، چک، کیفری، ملکی... بپرسید.<div class='vyDis'>پاسخ‌ها اطلاعات عمومی است و مشاوره حقوقی محسوب نمی‌شود.</div>","vyB",true);}};
 var chips=["مهریه","طلاق توافقی","چک برگشتی","کلاهبرداری","حضانت","حق‌الوکاله"];
 var cc=panel.querySelector("#vyChips");
 chips.forEach(function(c){var b=document.createElement("button");b.textContent=c;b.onclick=function(){answer(c);};cc.appendChild(b);});
