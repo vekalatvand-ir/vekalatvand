@@ -30,7 +30,7 @@ if(document.getElementById("vyFab")){document.getElementById("vyFab").remove();}
 if(document.getElementById("vyPanel")){document.getElementById("vyPanel").remove();}
 var fab=document.createElement("button");fab.id="vyFab";fab.setAttribute("aria-label","دستیار حقوقی");fab.innerHTML="⚖️";
 var panel=document.createElement("div");panel.id="vyPanel";panel.setAttribute("role","dialog");panel.setAttribute("aria-label","وکیل‌یار وکالت‌وند");
-panel.innerHTML='<div id="vyHead"><span style="font-size:1.5rem">⚖️</span><div>وکیل‌یار وکالت‌وند<small>متصل به Gemini • پاسخ هوشمند • دفتر مرتضی الماس‌پور</small></div></div><div id="vyBody"></div><div class="vyChips" id="vyChips"></div><div id="vyFoot"><input id="vyIn" placeholder="سوالت را بنویس... (مثل: مهریه)" autocomplete="off"><button id="vySend">➤</button></div>';
+panel.innerHTML='<div id="vyHead"><span style="font-size:1.5rem">⚖️</span><div>وکیل‌یار وکالت‌وند<small>متخصص قوانین ایران • پاسخ هوشمند</small></div></div><div id="vyBody"></div><div class="vyChips" id="vyChips"></div><div id="vyFoot"><input id="vyIn" placeholder="سوالت را بنویس... (مثل: مهریه)" autocomplete="off"><button id="vySend">➤</button></div>';
 document.body.appendChild(fab);document.body.appendChild(panel);
 var body=panel.querySelector("#vyBody"),inp=panel.querySelector("#vyIn");
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
@@ -39,20 +39,33 @@ function addWho(text,who,html){var d=document.createElement("div");d.className="
 async function answer(q){
   addWho(q,"vyU");
   hist.push({role:"user",text:q});
-  var typing=addWho("⏳ جمینای داره فکر می‌کنه...","vyB");
+  var typing=addWho("⏳ دارم فکر می‌کنم...","vyB");
+  var t="", src="Gemini";
+  var workerOk = WORKER_URL && WORKER_URL.indexOf("YOUR-SUBDOMAIN")===-1;
+  if(workerOk){
+    try{
+      var past=hist.slice(-8,-1).map(function(m){return {role:m.role==="user"?"user":"model",text:m.text};});
+      var res=await fetch(WORKER_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({q:q,history:past,sys:SYS})});
+      var j=await res.json();
+      if(res.ok && j && j.text) t=j.text;
+    }catch(e){ t=""; }
+  }
+  if(!t){
+    try{
+      src="هوش مصنوعی رایگان";
+      var prompt=(SYS+"\n\nسوال: "+q).slice(0,1800);
+      var r=await fetch("https://text.pollinations.ai/"+encodeURIComponent(prompt));
+      if(!r.ok) throw new Error("free-ai "+r.status);
+      t=(await r.text()||"").trim();
+    }catch(e2){ t=""; }
+  }
   try{
-    if(!WORKER_URL||WORKER_URL.indexOf("YOUR-SUBDOMAIN")!==-1) throw new Error("واسط امن (Worker) هنوز تنظیم نشده — مدیر سایت باید WORKER_URL را ست کند.");
-    var past=hist.slice(-8,-1).map(function(m){return {role:m.role==="user"?"user":"model",text:m.text};});
-    var res=await fetch(WORKER_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({q:q,history:past,sys:SYS})});
-    var j=await res.json();
-    if(!res.ok) throw new Error((j&&j.error)||("خطای "+res.status));
-    var t=(j&&j.text)||"";
     if(!t) throw new Error("پاسخ خالی");
     hist.push({role:"ai",text:t});
-    typing.innerHTML=fmt(t)+'<br><a class="vyWa" target="_blank" rel="noopener" href="https://wa.me/'+WA+'?text='+encodeURIComponent("سلام، سوال من درباره: "+q)+'">مشاوره واتساپ با وکیل</a><div class="vyDis">توجه: این راهنمایی عمومی با هوش مصنوعی است و مشاوره حقوقی محسوب نمی‌شود.</div><div class="vyPow">⚡ Powered by Gemini</div>';
+    typing.innerHTML=fmt(t)+'<br><a class="vyWa" target="_blank" rel="noopener" href="https://wa.me/'+WA+'?text='+encodeURIComponent("سلام، سوال من درباره: "+q)+'">مشاوره واتساپ با وکیل</a><div class="vyDis">توجه: این راهنمایی عمومی با هوش مصنوعی است و مشاوره حقوقی محسوب نمی‌شود.</div><div class="vyPow">⚡ '+src+'</div>';
     body.scrollTop=body.scrollHeight;
   }catch(e){
-    typing.innerHTML='موقتاً وصل نشدم ('+esc(e.message)+'). سوالتان را مستقیم برای وکیل بفرستید:<br><a class="vyWa" target="_blank" rel="noopener" href="https://wa.me/'+WA+'?text='+encodeURIComponent("سلام، سوال حقوقی من: "+q)+'">ارسال به واتساپ وکیل</a>';
+    typing.innerHTML='موقتاً وصل نشدم. سوالتان را مستقیم برای وکیل بفرستید:<br><a class="vyWa" target="_blank" rel="noopener" href="https://wa.me/'+WA+'?text='+encodeURIComponent("سلام، سوال حقوقی من: "+q)+'">ارسال به واتساپ وکیل</a>';
   }
 }
 fab.onclick=function(){panel.classList.toggle("open");if(panel.classList.contains("open")&&!body.children.length){addWho("سلام! من <b>وکیل‌یار وکالت‌وند</b> هستم 🤝<br>حالا با <b>Gemini</b> جواب می‌دهم، نه کلمه‌کلیدی! درباره مهریه، طلاق، چک، کیفری، ملکی... بپرسید.<div class='vyDis'>پاسخ‌ها با هوش مصنوعی + اطلاعات عمومی است.</div>","vyB",true);}};
