@@ -208,9 +208,8 @@ footer{border-top:1px solid var(--line);padding:26px 20px;text-align:center;colo
 <script>
 (function(){
 var WA="989934164512";
-// امنیت: کلید قبلاً اینجا بود و حذف شد. کلید جدید نسازید داخل فایل عمومی؛ از پروکسی سرور استفاده کنید.
-var KEY="";
-var MODELS=["gemini-3.5-flash-lite","gemini-3.5-flash","gemini-flash-lite-latest"];
+// امن: کلید Gemini داخل Cloudflare Worker می‌ماند، نه اینجا.
+var WORKER_URL="https://vakil-yar.YOUR-SUBDOMAIN.workers.dev/chat";
 var SYS="تو «وکیل‌یار وکالت‌وند» هستی: دستیار حقوقی فارسی دفتر مرتضی الماس‌پور، وکیل پایه یک دادگستری. متخصص قوانین ایران.\n- فارسی روان، اول خلاصه بعد قدم‌به‌قدم بعد مدارک لازم و قدم بعدی.\n- شماره ماده را فقط وقتی مطمئنی بگو.\n- آخر جواب یک خط: این راهنمایی عمومی است و جایگزین مشاوره وکیل نیست.\n- حداکثر 300 کلمه مگر قرارداد خواسته شود.";
 var hist=[];
 var body=document.getElementById("chatBody"),inp=document.getElementById("chatIn");
@@ -218,27 +217,18 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").repl
 function fmt(s){var h=esc(s);h=h.replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");h=h.replace(/\n/g,"<br>");return h;}
 function add(t,who,html){var d=document.createElement("div");d.className="msg "+who;if(html)d.innerHTML=t;else d.textContent=t;body.appendChild(d);body.scrollTop=body.scrollHeight;return d;}
 async function callGemini(q,past){
-  var payload={system_instruction:{parts:[{text:SYS}]},contents:past.concat([{role:"user",parts:[{text:q}]}]),generationConfig:{temperature:0.4,maxOutputTokens:1500}};
-  var models=MODELS;
-  var lastErr="";
-  for(var i=0;i<models.length;i++){
-    try{
-      var url="https://generativelanguage.googleapis.com/v1beta/models/"+models[i]+":generateContent?key="+encodeURIComponent(KEY);
-      var res=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
-      var j=await res.json();
-      if(!res.ok) throw new Error((j.error&&j.error.message)||("خطای "+res.status));
-      var t=(j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts||[]).map(function(x){return x.text||"";}).join("");
-      if(t) return t;
-      lastErr="پاسخ خالی";
-    }catch(e){lastErr=e.message;}
-  }
-  throw new Error(lastErr||"خطا در اتصال");
+  if(!WORKER_URL||WORKER_URL.indexOf("YOUR-SUBDOMAIN")!==-1) throw new Error("واسط امن (Worker) هنوز تنظیم نشده است.");
+  var hist2=past.map(function(m){return {role:m.role,text:(m.parts&&m.parts[0]&&m.parts[0].text)||""};});
+  var res=await fetch(WORKER_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({q:q,history:hist2,sys:SYS})});
+  var j=await res.json();
+  if(!res.ok) throw new Error((j&&j.error)||("خطای "+res.status));
+  if(!j.text) throw new Error("پاسخ خالی");
+  return j.text;
 }
 async function answer(q){
   add(q,"user");
   hist.push({role:"user",text:q});
   var typing=add("⏳ دارم فکر می‌کنم...","bot");
-  if(!KEY){typing.innerHTML='وکیل‌یار آنلاین نیست. سوالتان را مستقیم برای وکیل بفرستید:<br><a class="wa" target="_blank" rel="noopener" href="https://wa.me/989934164512">ارسال به واتساپ وکیل</a>';return;}
   try{
     var past=hist.slice(-8,-1).map(function(m){return {role:m.role==="user"?"user":"model",parts:[{text:m.text}]};});
     var t=await callGemini(q,past);
