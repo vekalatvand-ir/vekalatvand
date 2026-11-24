@@ -1,7 +1,7 @@
 (function(){
 "use strict";
 var WA="989934164512";
-// امن: کلید Gemini داخل Cloudflare Worker می‌ماند، نه اینجا.
+// امن: کلید هوش مصنوعی داخل Cloudflare Worker می‌ماند، نه اینجا.
 // بعد از ساخت ورکر، آدرسش را اینجا بگذار. مثال:
 // https://vakil-yar.xxxxx.workers.dev/chat
 var WORKER_URL="https://vakil-yar.YOUR-SUBDOMAIN.workers.dev/chat";
@@ -40,7 +40,7 @@ async function answer(q){
   addWho(q,"vyU");
   hist.push({role:"user",text:q});
   var typing=addWho("⏳ دارم فکر می‌کنم...","vyB");
-  var t="", src="Gemini";
+  var t="", src="هوش مصنوعی";
   var workerOk = WORKER_URL && WORKER_URL.indexOf("YOUR-SUBDOMAIN")===-1;
   if(workerOk){
     try{
@@ -68,7 +68,7 @@ async function answer(q){
     typing.innerHTML='موقتاً وصل نشدم. سوالتان را مستقیم برای وکیل بفرستید:<br><a class="vyWa" target="_blank" rel="noopener" href="https://wa.me/'+WA+'?text='+encodeURIComponent("سلام، سوال حقوقی من: "+q)+'">ارسال به واتساپ وکیل</a>';
   }
 }
-fab.onclick=function(){panel.classList.toggle("open");if(panel.classList.contains("open")&&!body.children.length){addWho("سلام! من <b>وکیل‌یار وکالت‌وند</b> هستم 🤝<br>حالا با <b>Gemini</b> جواب می‌دهم، نه کلمه‌کلیدی! درباره مهریه، طلاق، چک، کیفری، ملکی... بپرسید.<div class='vyDis'>پاسخ‌ها با هوش مصنوعی + اطلاعات عمومی است.</div>","vyB",true);}};
+fab.onclick=function(){panel.classList.toggle("open");if(panel.classList.contains("open")&&!body.children.length){addWho("سلام! من <b>وکیل‌یار وکالت‌وند</b> هستم 🤝<br>حالا با <b>هوش مصنوعی</b> جواب می‌دهم، نه کلمه‌کلیدی! درباره مهریه، طلاق، چک، کیفری، ملکی... بپرسید.<div class='vyDis'>پاسخ‌ها با هوش مصنوعی + اطلاعات عمومی است.</div>","vyB",true);}};
 var chips=["مهریه","طلاق توافقی","چک برگشتی","کلاهبرداری","حضانت","حق‌الوکاله"];
 var cc=panel.querySelector("#vyChips");
 chips.forEach(function(c){var b=document.createElement("button");b.textContent=c;b.onclick=function(){answer(c);};cc.appendChild(b);});
