@@ -1,13 +1,10 @@
 (function(){
 "use strict";
 var WA="989934164512";
-// امنیت: کلید Gemini نباید داخل سایت عمومی (گیت‌هاب) باشد، چون هر بازدیدکننده می‌تواند آن را کپی و سهمیه شما را مصرف کند.
-// این فایل عمداً بدون کلید منتشر می‌شود. برای فعال‌سازی وکیل‌یار:
-// ۱) در Google AI Studio کلید قبلی را حذف/Revoke کنید و یک کلید جدید با محدودیت HTTP Referrer بسازید،
-// ۲) یا بهتر: یک پروکسی سمت سرور بسازید و فقط از آن صدا بزنید.
-// تا وقتی کلید تنظیم نشده، وکیل‌یار مستقیم دکمه واتساپ را نشان می‌دهد و چیزی لو نمی‌رود.
-var GEMINI_KEY="";
-var MODELS=["gemini-3.5-flash-lite","gemini-3.5-flash","gemini-flash-lite-latest"];
+// امن: کلید Gemini داخل Cloudflare Worker می‌ماند، نه اینجا.
+// بعد از ساخت ورکر، آدرسش را اینجا بگذار. مثال:
+// https://vakil-yar.xxxxx.workers.dev/chat
+var WORKER_URL="https://vakil-yar.YOUR-SUBDOMAIN.workers.dev/chat";
 var SYS="تو «وکیل‌یار وکالت‌وند» هستی: دستیار حقوقی فارسی دفتر مرتضی الماس‌پور، وکیل پایه یک دادگستری (بیش از ۱۰ سال تجربه، ۱۰۰+ پرونده موفق). متخصص قوانین ایران (مدنی، کیفری، خانواده، کار، تجارت، آیین دادرسی).\nقواعد:\n- فارسی روان، دقیق و کاربردی جواب بده. اول خلاصه، بعد قدم‌به‌قدم، بعد مدارک لازم و قدم بعدی.\n- اگر اسم خودت را پرسیدند بگو: من وکیل‌یار وکالت‌وند هستم، دستیار هوشمند دفتر مرتضی الماس‌پور.\n- شماره ماده را فقط وقتی مطمئنی بگو، وگرنه کلی بگو.\n- در انتهای جواب یک خط بگو: این راهنمایی عمومی است و جایگزین مشاوره وکیل نیست. برای پرونده‌تان در واتساپ پیام دهید.\n- جواب کوتاه و مفید بده (حداکثر ۳۰۰ کلمه) مگر قرارداد/لایحه خواسته شود.";
 var hist=[];
 var css="#vyFab{position:fixed;left:16px;bottom:148px;z-index:980;width:58px;height:58px;border-radius:50%;border:2px solid #f5e3b8;background:linear-gradient(145deg,#fff3d1,#c89b5a 60%,#7a4d1f);color:#1a120b;font-size:26px;cursor:pointer;box-shadow:0 12px 30px rgba(200,155,90,.5);display:grid;place-items:center;font-family:inherit}"
@@ -42,24 +39,15 @@ function addWho(text,who,html){var d=document.createElement("div");d.className="
 async function answer(q){
   addWho(q,"vyU");
   hist.push({role:"user",text:q});
-  var typing=addWho("⏳ دارم فکر می‌کنم...","vyB");
-  if(!GEMINI_KEY){typing.innerHTML='وکیل‌یار آنلاین نیست. برای وکیل در واتساپ پیام بفرستید:<br><a class="vyWa" target="_blank" rel="noopener" href="https://wa.me/989934164512">ارسال به واتساپ وکیل</a>';return;}
+  var typing=addWho("⏳ جمینای داره فکر می‌کنه...","vyB");
   try{
-    var past=hist.slice(-8,-1).map(function(m){return {role:m.role==="user"?"user":"model",parts:[{text:m.text}]};});
-    var payload={system_instruction:{parts:[{text:SYS}]},contents:past.concat([{role:"user",parts:[{text:q}]}]),generationConfig:{temperature:0.4,maxOutputTokens:1500}};
-    var lastErr="";var t="";
-    for(var i=0;i<MODELS.length;i++){
-      try{
-        var url="https://generativelanguage.googleapis.com/v1beta/models/"+MODELS[i]+":generateContent?key="+encodeURIComponent(GEMINI_KEY);
-        var res=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
-        var j=await res.json();
-        if(!res.ok) throw new Error((j.error&&j.error.message)||("خطای "+res.status));
-        t=(j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts||[]).map(function(x){return x.text||"";}).join("")||"";
-        if(t) break;
-        lastErr="پاسخ خالی";
-      }catch(e){lastErr=e.message;}
-    }
-    if(!t) throw new Error(lastErr||"خطا در اتصال");
+    if(!WORKER_URL||WORKER_URL.indexOf("YOUR-SUBDOMAIN")!==-1) throw new Error("واسط امن (Worker) هنوز تنظیم نشده — مدیر سایت باید WORKER_URL را ست کند.");
+    var past=hist.slice(-8,-1).map(function(m){return {role:m.role==="user"?"user":"model",text:m.text};});
+    var res=await fetch(WORKER_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({q:q,history:past,sys:SYS})});
+    var j=await res.json();
+    if(!res.ok) throw new Error((j&&j.error)||("خطای "+res.status));
+    var t=(j&&j.text)||"";
+    if(!t) throw new Error("پاسخ خالی");
     hist.push({role:"ai",text:t});
     typing.innerHTML=fmt(t)+'<br><a class="vyWa" target="_blank" rel="noopener" href="https://wa.me/'+WA+'?text='+encodeURIComponent("سلام، سوال من درباره: "+q)+'">مشاوره واتساپ با وکیل</a><div class="vyDis">توجه: این راهنمایی عمومی با هوش مصنوعی است و مشاوره حقوقی محسوب نمی‌شود.</div><div class="vyPow">⚡ Powered by Gemini</div>';
     body.scrollTop=body.scrollHeight;
@@ -67,7 +55,7 @@ async function answer(q){
     typing.innerHTML='موقتاً وصل نشدم ('+esc(e.message)+'). سوالتان را مستقیم برای وکیل بفرستید:<br><a class="vyWa" target="_blank" rel="noopener" href="https://wa.me/'+WA+'?text='+encodeURIComponent("سلام، سوال حقوقی من: "+q)+'">ارسال به واتساپ وکیل</a>';
   }
 }
-fab.onclick=function(){panel.classList.toggle("open");if(panel.classList.contains("open")&&!body.children.length){addWho("سلام! من <b>وکیل‌یار وکالت‌وند</b> هستم 🤝<br>اینجا سوالتان را بنویسید، نه کلمه‌کلیدی! درباره مهریه، طلاق، چک، کیفری، ملکی... بپرسید.<div class='vyDis'>پاسخ‌ها اطلاعات عمومی است و مشاوره حقوقی محسوب نمی‌شود.</div>","vyB",true);}};
+fab.onclick=function(){panel.classList.toggle("open");if(panel.classList.contains("open")&&!body.children.length){addWho("سلام! من <b>وکیل‌یار وکالت‌وند</b> هستم 🤝<br>حالا با <b>Gemini</b> جواب می‌دهم، نه کلمه‌کلیدی! درباره مهریه، طلاق، چک، کیفری، ملکی... بپرسید.<div class='vyDis'>پاسخ‌ها با هوش مصنوعی + اطلاعات عمومی است.</div>","vyB",true);}};
 var chips=["مهریه","طلاق توافقی","چک برگشتی","کلاهبرداری","حضانت","حق‌الوکاله"];
 var cc=panel.querySelector("#vyChips");
 chips.forEach(function(c){var b=document.createElement("button");b.textContent=c;b.onclick=function(){answer(c);};cc.appendChild(b);});
