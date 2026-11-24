@@ -1,0 +1,9 @@
+# راه‌اندازی ورکر وکیل‌یار (۳ دقیقه)
+1) aistudio.google.com/apikey → Create API key (با AIza شروع می‌شود)
+2) dash.cloudflare.com → Workers & Pages → Create Worker → Deploy → Edit Code → کل محتوای cloudflare-worker.js را Paste کن → Deploy
+3) در همان ورکر: Settings → Variables → Add Secret → Name=GEMINI_API_KEY → Value=کلید AIza → Save
+4) آدرس ورکر را کپی کن مثلا https://vakil-yar.XXXX.workers.dev
+5) آن آدرس + /chat را در فایل vakil-yar.js جای YOUR-SUBDOMAIN بگذار و Push کن
+
+تست: سایت را باز کن → دکمه ⚖️ → بنویس «مهریه» → باید جواب هوشمند بیاید نه خطای Worker
+امنیت: کلید فقط در Secret ورکر است. هرگز در گیت‌هاب و JS نگذار.
